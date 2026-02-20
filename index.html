@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I-Djassa — Le Grand Marché Ivoirien en Ligne</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #F4722B;
+      --orange-light: #FF9A5C;
+      --orange-dark: #C4511A;
+      --green: #1A7A4A;
+      --green-light: #2AAD68;
+      --cream: #FDF6EC;
+      --dark: #0F0E0C;
+      --dark-2: #1C1A16;
+      --dark-3: #2A2720;
+      --text-muted: #8A8070;
+      --white: #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ========== NAV ========== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(15, 14, 12, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(244, 114, 43, 0.15);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+    }
+    .logo span.i { color: var(--orange); }
+    .logo span.djassa { color: var(--white); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--orange); }
+
+    .nav-cta {
+      background: var(--orange);
+      color: var(--white) !important;
+      padding: 0.5rem 1.3rem;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--orange-dark) !important; color: var(--white) !important; }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(244, 114, 43, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(26, 122, 74, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 30% at 80% 70%, rgba(244, 114, 43, 0.08) 0%, transparent 60%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(244, 114, 43, 0.12);
+      border: 1px solid rgba(244, 114, 43, 0.3);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--orange-light);
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge::before { content: '🇨🇮'; }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero h1 .highlight {
+      color: var(--orange);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0; right: 0;
+      height: 4px;
+      background: var(--orange);
+      border-radius: 2px;
+      transform: scaleX(0);
+      animation: underline 0.5s 0.8s ease forwards;
+    }
+
+    @keyframes underline { to { transform: scaleX(1); } }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: rgba(255,255,255,0.6);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: var(--white);
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      box-shadow: 0 8px 30px rgba(244, 114, 43, 0.35);
+    }
+    .btn-primary:hover {
+      background: var(--orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(244, 114, 43, 0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.07);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 5rem;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .stat {
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--orange);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.2rem;
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ========== CATEGORIES ========== */
+    .section {
+      padding: 6rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      color: rgba(255,255,255,0.5);
+      font-size: 1.05rem;
+      margin-bottom: 3rem;
+      max-width: 500px;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .cat-card {
+      background: var(--dark-2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .cat-card:hover {
+      background: var(--dark-3);
+      border-color: var(--orange);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(244, 114, 43, 0.15);
+    }
+
+    .cat-icon {
+      font-size: 2.2rem;
+      display: block;
+    }
+
+    .cat-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .cat-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ========== HOW IT WORKS ========== */
+    .how-section {
+      background: var(--dark-2);
+      padding: 6rem 3rem;
+    }
+
+    .how-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .step-card {
+      position: relative;
+      padding: 2rem;
+      background: var(--dark-3);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: border-color 0.2s;
+    }
+    .step-card:hover { border-color: rgba(244, 114, 43, 0.3); }
+
+    .step-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: rgba(244, 114, 43, 0.15);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .step-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    /* ========== TRUST ========== */
+    .trust-section {
+      padding: 6rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .trust-card {
+      background: linear-gradient(135deg, var(--dark-2) 0%, var(--dark-3) 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.25s;
+    }
+    .trust-card:hover {
+      border-color: rgba(26, 122, 74, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .trust-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(26, 122, 74, 0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .trust-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .trust-desc {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-bronze { background: rgba(205,127,50,0.15); color: #CD7F32; border: 1px solid rgba(205,127,50,0.3); }
+    .badge-silver { background: rgba(192,192,192,0.15); color: #C0C0C0; border: 1px solid rgba(192,192,192,0.3); }
+    .badge-gold { background: rgba(255,215,0,0.15); color: #FFD700; border: 1px solid rgba(255,215,0,0.3); }
+
+    /* ========== CTA FINAL ========== */
+    .cta-section {
+      margin: 0 3rem 6rem;
+      background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 50%, var(--orange-light) 100%);
+      border-radius: 28px;
+      padding: 5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .cta-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .cta-section p {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .cta-section .btn-white {
+      background: var(--white);
+      color: var(--orange-dark);
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      position: relative;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    .cta-section .btn-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: var(--dark-2);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 3rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .footer-links a {
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--orange); }
+
+    .footer-copy {
+      color: rgba(255,255,255,0.3);
+      font-size: 0.82rem;
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== ANNONCE PREVIEW ========== */
+    .preview-section {
+      background: var(--dark-2);
+      padding: 6rem 3rem;
+    }
+
+    .preview-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .annonces-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.2rem;
+      margin-top: 3rem;
+    }
+
+    .annonce-card {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+    .annonce-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      border-color: rgba(244, 114, 43, 0.25);
+    }
+
+    .annonce-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .annonce-body {
+      padding: 1rem;
+    }
+
+    .annonce-cat {
+      font-size: 0.72rem;
+      color: var(--orange);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+
+    .annonce-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .annonce-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    .annonce-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .annonce-loc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .annonce-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      background: rgba(26, 122, 74, 0.15);
+      color: var(--green-light);
+      border: 1px solid rgba(26, 122, 74, 0.25);
+      border-radius: 100px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    /* ========== SEARCH BAR ========== */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      padding: 0.6rem 0.6rem 0.6rem 1.5rem;
+      max-width: 560px;
+      width: 100%;
+      margin: 2rem auto 0;
+      animation: fadeUp 0.7s 0.35s ease both;
+      gap: 0.5rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--white);
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .search-bar input::placeholder { color: rgba(255,255,255,0.35); }
+
+    .search-btn {
+      background: var(--orange);
+      border: none;
+      border-radius: 100px;
+      padding: 0.6rem 1.3rem;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--orange-dark); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-stats { gap: 1.5rem; }
+      .section, .trust-section { padding: 4rem 1.5rem; }
+      .how-section, .preview-section { padding: 4rem 1.5rem; }
+      .cta-section { margin: 0 1.5rem 4rem; padding: 3rem 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <span class="i">I-</span><span class="djassa">Djassa</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#categories">Catégories</a></li>
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#confiance">Confiance & Sécurité</a></li>
+    <li><a href="#" class="nav-cta">Publier une annonce</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-badge">Bêta — Côte d'Ivoire 🚀</div>
+
+  <h1>
+    Le Grand Marché<br/>
+    <span class="highlight">Ivoirien</span> en Ligne
+  </h1>
+
+  <p>
+    Achetez et vendez tout ce dont vous avez besoin — électronique, mode, mobilier et bien plus — en toute sécurité, entre Ivoiriens.
+  </p>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Rechercher un article, une marque..." />
+    <button class="search-btn">🔍 Rechercher</button>
+  </div>
+
+  <div class="hero-actions" style="margin-top: 1.5rem;">
+    <a href="#" class="btn-primary">📦 Publier une annonce</a>
+    <a href="#categories" class="btn-secondary">Parcourir les annonces →</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Gratuit</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-number">KYC</div>
+      <div class="stat-label">Vendeurs vérifiés</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-number">🇨🇮</div>
+      <div class="stat-label">100% Local</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="section-label">Parcourir par catégorie</div>
+  <h2 class="section-title">Tout se trouve<br/>sur I-Djassa</h2>
+  <p class="section-subtitle">Des milliers d'articles dans toutes les catégories, près de chez vous.</p>
+
+  <div class="categories-grid">
+    <a class="cat-card" href="#">
+      <span class="cat-icon">📱</span>
+      <span class="cat-name">Téléphones & Tablettes</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">💻</span>
+      <span class="cat-name">Informatique</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">📺</span>
+      <span class="cat-name">Électroménager</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">👗</span>
+      <span class="cat-name">Mode & Vêtements</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">🚗</span>
+      <span class="cat-name">Véhicules</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">🏠</span>
+      <span class="cat-name">Immobilier</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">🛋️</span>
+      <span class="cat-name">Maison & Jardin</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">🎮</span>
+      <span class="cat-name">Jeux & Loisirs</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">🍳</span>
+      <span class="cat-name">Cuisine</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">📚</span>
+      <span class="cat-name">Livres & Éducation</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">💄</span>
+      <span class="cat-name">Beauté & Santé</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+    <a class="cat-card" href="#">
+      <span class="cat-icon">⚙️</span>
+      <span class="cat-name">Outillage</span>
+      <span class="cat-count">Bientôt disponible</span>
+    </a>
+  </div>
+</section>
+
+<!-- ANNONCES PREVIEW -->
+<section class="preview-section">
+  <div class="preview-inner">
+    <div class="section-label">Annonces récentes</div>
+    <h2 class="section-title">Ce qui se vend<br/>en ce moment</h2>
+    <p class="section-subtitle">Exemples d'annonces sur I-Djassa</p>
+
+    <div class="annonces-grid">
+      <div class="annonce-card">
+        <div class="annonce-img">📱</div>
+        <div class="annonce-body">
+          <div class="annonce-cat">Téléphones</div>
+          <div class="annonce-title">Samsung Galaxy A54 — Très bon état</div>
+          <div class="annonce-price">120 000 FCFA</div>
+          <div class="annonce-footer">
+            <span class="annonce-loc">📍 Cocody, Abidjan</span>
+            <span class="annonce-badge">✅ Vérifié</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="annonce-card">
+        <div class="annonce-img">💻</div>
+        <div class="annonce-body">
+          <div class="annonce-cat">Informatique</div>
+          <div class="annonce-title">MacBook Pro 2020 — M1 256Go</div>
+          <div class="annonce-price">650 000 FCFA</div>
+          <div class="annonce-footer">
+            <span class="annonce-loc">📍 Plateau, Abidjan</span>
+            <span class="annonce-badge">✅ Vérifié</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="annonce-card">
+        <div class="annonce-img">📺</div>
+        <div class="annonce-body">
+          <div class="annonce-cat">Électroménager</div>
+          <div class="annonce-title">TV LG 55 pouces 4K Smart TV</div>
+          <div class="annonce-price">280 000 FCFA</div>
+          <div class="annonce-footer">
+            <span class="annonce-loc">📍 Yopougon, Abidjan</span>
+            <span class="annonce-badge">✅ Vérifié</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="annonce-card">
+        <div class="annonce-img">🛋️</div>
+        <div class="annonce-body">
+          <div class="annonce-cat">Mobilier</div>
+          <div class="annonce-title">Canapé 3 places — Cuir marron</div>
+          <div class="annonce-price">85 000 FCFA</div>
+          <div class="annonce-footer">
+            <span class="annonce-loc">📍 Marcory, Abidjan</span>
+            <span class="annonce-badge">✅ Vérifié</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="how-section" id="comment">
+  <div class="how-inner">
+    <div class="section-label">Simple & rapide</div>
+    <h2 class="section-title">Comment ça marche ?</h2>
+    <p class="section-subtitle">En quelques étapes, achetez ou vendez en toute sécurité.</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">01</div>
+        <span class="step-icon">📝</span>
+        <div class="step-title">Créez votre compte</div>
+        <div class="step-desc">Inscrivez-vous avec votre numéro de téléphone. Vérifiez votre identité pour devenir un vendeur de confiance.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">02</div>
+        <span class="step-icon">📸</span>
+        <div class="step-title">Publiez votre annonce</div>
+        <div class="step-desc">Ajoutez des photos, une description et votre prix. Joignez vos preuves d'achat pour plus de crédibilité.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">03</div>
+        <span class="step-icon">💬</span>
+        <div class="step-title">Contactez ou soyez contacté</div>
+        <div class="step-desc">Les acheteurs vous contactent directement via WhatsApp ou appel. Négociez et convenez d'un rendez-vous.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">04</div>
+        <span class="step-icon">🤝</span>
+        <div class="step-title">Concluez la vente</div>
+        <div class="step-desc">Rencontrez-vous dans un lieu public et sécurisé. Échangez l'article et le paiement en toute confiance.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIANCE & SÉCURITÉ -->
+<section class="trust-section" id="confiance">
+  <div class="section-label">Votre sécurité avant tout</div>
+  <h2 class="section-title">I-Djassa, la plateforme<br/>de confiance</h2>
+  <p class="section-subtitle">Ce qui nous différencie des groupes Facebook et des autres plateformes.</p>
+
+  <div class="trust-grid">
+    <div class="trust-card">
+      <div class="trust-icon">🪪</div>
+      <div class="trust-title">Vérification KYC</div>
+      <div class="trust-desc">Chaque vendeur vérifie son identité avec sa CNI ou son passeport. Finis les anonymes et les arnaqueurs.</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">📄</div>
+      <div class="trust-title">Preuves de propriété</div>
+      <div class="trust-desc">Les vendeurs peuvent joindre leurs reçus d'achat et factures pour prouver qu'ils sont bien propriétaires de l'article.</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">⭐</div>
+      <div class="trust-title">Système de badges</div>
+      <div class="trust-desc">
+        Chaque vendeur gagne un badge selon son niveau de vérification.
+        <div class="badge-row">
+          <span class="badge badge-bronze">🥉 Basique</span>
+          <span class="badge badge-silver">🥈 Vérifié</span>
+          <span class="badge badge-gold">🥇 Certifié</span>
+        </div>
+      </div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">🔒</div>
+      <div class="trust-title">Données protégées</div>
+      <div class="trust-desc">Vos données personnelles sont sécurisées conformément à la loi ivoirienne n°2013-450 sur la protection des données.</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">🚨</div>
+      <div class="trust-title">Signalement facile</div>
+      <div class="trust-desc">Signalez toute annonce suspecte en un clic. Notre équipe examine chaque signalement rapidement.</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">📱</div>
+      <div class="trust-title">Téléphone vérifié</div>
+      <div class="trust-desc">Chaque compte est lié à un numéro de téléphone ivoirien vérifié par SMS. Une personne = un compte.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <h2>Rejoignez I-Djassa dès maintenant</h2>
+  <p>Gratuit pour toujours. Sécurisé. 100% Ivoirien.</p>
+  <a href="#" class="btn-white">🚀 Créer mon compte gratuitement</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <span style="color: var(--orange)">I-</span>Djassa
+    </div>
+    <ul class="footer-links">
+      <li><a href="#">À propos</a></li>
+      <li><a href="#">Confidentialité</a></li>
+      <li><a href="#">CGU</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Aide</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 I-Djassa — Côte d'Ivoire 🇨🇮</div>
+  </div>
+</footer>
+
+</body>
+</html>
