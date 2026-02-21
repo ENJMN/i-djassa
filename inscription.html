@@ -512,7 +512,7 @@
   // ========== ÉTAPE 2 → ENVOI OTP (Téléphone) ==========
   async function showRegStep3() {
     const tel = document.querySelector('#regStep2 input[type="tel"]')?.value?.trim() || '';
-    if (!tel || tel.length < 8) { showError('Veuillez entrer un numéro valide.'); return; }
+    if (!tel) { showError('Veuillez entrer un numéro valide.'); return; }
 
     // Formater le numéro ivoirien
     currentTelephone = tel.startsWith('+') ? tel : '+225' + tel.replace(/^0/, '');
