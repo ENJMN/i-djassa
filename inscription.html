@@ -459,6 +459,34 @@
 </style>
 
 <script>
+  // ========== GESTION SESSION ==========
+  function saveUser(prenom, nom, tel) {
+    const user = { prenom, nom, tel, badge: 'bronze', since: new Date().toISOString() };
+    sessionStorage.setItem('idjassa_user', JSON.stringify(user));
+  }
+
+  function getRedirect() {
+    // Récupère la page de destination après connexion
+    const params = new URLSearchParams(window.location.search);
+    return params.get('next') || sessionStorage.getItem('idjassa_redirect') || 'annonces.html';
+  }
+
+  function redirectAfterLogin() {
+    const dest = getRedirect();
+    sessionStorage.removeItem('idjassa_redirect');
+    window.location.href = dest;
+  }
+
+  // Si déjà connecté → rediriger directement
+  function checkAlreadyLoggedIn() {
+    try {
+      const user = JSON.parse(sessionStorage.getItem('idjassa_user'));
+      if (user) redirectAfterLogin();
+    } catch {}
+  }
+  checkAlreadyLoggedIn();
+
+  // ========== TABS ==========
   function switchTab(tab) {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.auth-panel[id$="Panel"]').forEach(p => p.classList.remove('show'));
@@ -477,17 +505,44 @@
     document.getElementById('regStep' + n).classList.add('show');
   }
 
-  function showRegStep2() { showRegStep(2); }
-  function showRegStep3() { showRegStep(3); }
+  function showRegStep2() {
+    // Récupérer les infos saisies à l'étape 1
+    const prenom = document.querySelector('#regStep1 input[placeholder="Kouamé"]')?.value || '';
+    const nom = document.querySelector('#regStep1 input[placeholder="Konan"]')?.value || '';
+    if (!prenom || !nom) { alert('Veuillez renseigner votre prénom et nom.'); return; }
+    showRegStep(2);
+  }
 
+  function showRegStep3() {
+    // Vérification code OTP (simulé : n'importe quel code à 4 chiffres)
+    const code = ['otp0','otp1','otp2','otp3'].map(id => document.getElementById(id)?.value || '').join('');
+    if (code.length < 4) { alert('Veuillez entrer le code à 4 chiffres.'); return; }
+    showRegStep(3);
+  }
+
+  // ========== CONNEXION ==========
   function showOTP() {
-    window.location.href = 'annonces.html';
+    // Simuler une connexion réussie
+    // En production : appel API pour vérifier le mot de passe
+    saveUser('Utilisateur', '', '07XXXXXXXX');
+    redirectAfterLogin();
   }
 
+  // ========== INSCRIPTION TERMINÉE ==========
   function finishRegister() {
+    // Récupérer le prénom et nom saisis
+    const prenom = document.querySelector('#regStep1 input[placeholder="Kouamé"]')?.value || 'Utilisateur';
+    const nom = document.querySelector('#regStep1 input[placeholder="Konan"]')?.value || '';
+    saveUser(prenom, nom, '07XXXXXXXX');
+
+    // Afficher la popup succès
     document.getElementById('successOverlay').style.display = 'flex';
+
+    // Rediriger après 3 secondes
+    setTimeout(() => redirectAfterLogin(), 3000);
   }
 
+  // ========== UTILITAIRES ==========
   function togglePassword(id) {
     const input = document.getElementById(id);
     input.type = input.type === 'password' ? 'text' : 'password';
@@ -499,6 +554,23 @@
       if (next) next.focus();
     }
   }
+
+  // Afficher le message si redirigé depuis une page protégée
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('next')) {
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: rgba(244,114,43,0.1); border: 1px solid rgba(244,114,43,0.25);
+        border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 1rem;
+        font-size: 0.85rem; color: rgba(255,255,255,0.8);
+        display: flex; gap: 0.5rem; align-items: center;
+      `;
+      banner.innerHTML = '🔒 Connectez-vous pour accéder à cette fonctionnalité.';
+      const box = document.querySelector('.auth-box');
+      if (box) box.insertBefore(banner, box.firstChild);
+    }
+  });
 </script>
 </body>
 </html>

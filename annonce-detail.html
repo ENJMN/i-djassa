@@ -352,7 +352,17 @@
   <a href="index.html" class="logo"><span class="i">I-</span><span class="d">Djassa</span></a>
   <div class="nav-right">
     <a href="annonces.html" class="nav-link">← Retour aux annonces</a>
-    <a href="publier.html" class="btn-publier">+ Publier</a>
+    <!-- Non connecté -->
+    <div id="nav-guest" style="display:flex;align-items:center;gap:0.7rem">
+      <a href="inscription.html" class="nav-link">Connexion</a>
+      <a href="publier.html" class="btn-publier" onclick="return requireLogin(event)">+ Publier</a>
+    </div>
+    <!-- Connecté -->
+    <div id="nav-user" style="display:none;align-items:center;gap:0.7rem">
+      <span style="font-size:0.85rem;color:var(--text-muted)">👤 <span id="nav-username"></span></span>
+      <a href="publier.html" class="btn-publier">+ Publier</a>
+      <button onclick="logout()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);padding:0.45rem 0.9rem;border-radius:100px;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Déconnexion</button>
+    </div>
   </div>
 </nav>
 
@@ -527,20 +537,74 @@
           </div>
         </div>
 
-        <button class="btn-whatsapp" onclick="contactWhatsApp()">
-          💬 Contacter sur WhatsApp
-        </button>
-
-        <button class="btn-call" onclick="callSeller()">
-          📞 Appeler le vendeur
-        </button>
-
-        <button class="btn-signaler">🚩 Signaler cette annonce</button>
-
-        <div class="safety-tip">
-          <span>⚠️</span>
-          <span>Rencontrez le vendeur dans un lieu public. Ne payez jamais à l'avance sans voir l'article.</span>
+        <!-- ÉTAT CONNECTÉ -->
+        <div id="contact-connected" style="display:none">
+          <button class="btn-whatsapp" onclick="contactWhatsApp()">
+            💬 Contacter sur WhatsApp
+          </button>
+          <button class="btn-call" onclick="callSeller()">
+            📞 Appeler le vendeur
+          </button>
+          <button class="btn-signaler">🚩 Signaler cette annonce</button>
+          <div class="safety-tip">
+            <span>⚠️</span>
+            <span>Rencontrez le vendeur dans un lieu public. Ne payez jamais à l'avance sans voir l'article.</span>
+          </div>
         </div>
+
+        <!-- ÉTAT NON CONNECTÉ -->
+        <div id="contact-locked">
+          <div style="
+            background: rgba(244,114,43,0.06);
+            border: 1px dashed rgba(244,114,43,0.3);
+            border-radius: 14px;
+            padding: 1.4rem;
+            text-align: center;
+            margin-bottom: 1rem;
+          ">
+            <div style="font-size:2rem;margin-bottom:0.6rem">🔒</div>
+            <div style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.4rem">
+              Coordonnées masquées
+            </div>
+            <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.2rem">
+              Connectez-vous pour voir le numéro WhatsApp et contacter ce vendeur.
+            </div>
+            <a href="inscription.html" style="
+              display:block; padding:0.8rem; border-radius:100px;
+              background:var(--orange); color:var(--white);
+              font-weight:700; font-size:0.92rem; text-decoration:none;
+              margin-bottom:0.6rem; transition:background 0.2s;
+            ">🚀 Créer un compte gratuit</a>
+            <a href="inscription.html" style="
+              display:block; padding:0.7rem; border-radius:100px;
+              border:1px solid rgba(255,255,255,0.15);
+              color:rgba(255,255,255,0.7); font-size:0.88rem; text-decoration:none;
+              transition:all 0.2s;
+            ">Se connecter</a>
+          </div>
+
+          <!-- Aperçu flou du numéro -->
+          <div style="
+            display:flex; align-items:center; gap:0.7rem;
+            padding:0.8rem 1rem;
+            background:var(--dark-3); border-radius:10px;
+            margin-bottom:0.7rem;
+            filter: blur(4px); user-select:none; pointer-events:none;
+          ">
+            <span style="font-size:1.2rem">💬</span>
+            <span style="font-size:0.9rem;font-weight:600">+225 07 ●● ●● ●● ●●</span>
+          </div>
+          <div style="
+            display:flex; align-items:center; gap:0.7rem;
+            padding:0.8rem 1rem;
+            background:var(--dark-3); border-radius:10px;
+            filter: blur(4px); user-select:none; pointer-events:none;
+          ">
+            <span style="font-size:1.2rem">📞</span>
+            <span style="font-size:0.9rem;font-weight:600">+225 07 ●● ●● ●● ●●</span>
+          </div>
+        </div>
+
       </div>
 
       <!-- VENDEUR -->
@@ -603,6 +667,45 @@
 </div>
 
 <script>
+  // ========== SYSTÈME D'AUTH SIMPLIFIÉ ==========
+  // En production, ceci sera remplacé par un vrai token JWT / session serveur.
+  // Pour la démo, on utilise sessionStorage.
+
+  function getUser() {
+    try { return JSON.parse(sessionStorage.getItem('idjassa_user')); } catch { return null; }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('idjassa_user');
+    location.reload();
+  }
+
+  function requireLogin(e) {
+    if (!getUser()) {
+      e.preventDefault();
+      window.location.href = 'inscription.html?next=publier.html';
+    }
+  }
+
+  function initAuth() {
+    const user = getUser();
+    if (user) {
+      // Connecté — afficher les coordonnées
+      document.getElementById('nav-guest').style.display = 'none';
+      document.getElementById('nav-user').style.display = 'flex';
+      document.getElementById('nav-username').textContent = user.prenom;
+      document.getElementById('contact-locked').style.display = 'none';
+      document.getElementById('contact-connected').style.display = 'block';
+    } else {
+      // Non connecté — masquer les coordonnées
+      document.getElementById('nav-guest').style.display = 'flex';
+      document.getElementById('nav-user').style.display = 'none';
+      document.getElementById('contact-locked').style.display = 'block';
+      document.getElementById('contact-connected').style.display = 'none';
+    }
+  }
+
+  // ========== GALERIE ==========
   const imgs = ['📱', '🔋', '📲', '🖥️', '📦'];
   let currentImg = 0;
   let isFav = false;
@@ -626,19 +729,23 @@
   }
 
   function toggleFav() {
+    if (!getUser()) { window.location.href = 'inscription.html'; return; }
     isFav = !isFav;
     document.getElementById('favBtn').textContent = isFav ? '❤️' : '🤍';
   }
 
+  // ========== CONTACT ==========
   function contactWhatsApp() {
     const msg = encodeURIComponent("Bonjour, je suis intéressé par votre annonce *Samsung Galaxy A54 128Go* sur I-Djassa. Est-il encore disponible ?");
     window.open('https://wa.me/2250700000000?text=' + msg, '_blank');
   }
 
   function callSeller() {
-    alert('Numéro du vendeur : +225 07 XX XX XX XX\n\n(En production, le numéro sera affiché après connexion)');
+    // En production : numéro récupéré depuis l'API
+    window.open('tel:+2250700000000');
   }
 
+  // ========== PARTAGE ==========
   function shareWA() {
     const msg = encodeURIComponent("Regarde cette annonce sur I-Djassa : Samsung Galaxy A54 128Go à 120 000 FCFA ! " + window.location.href);
     window.open('https://wa.me/?text=' + msg, '_blank');
@@ -653,6 +760,9 @@
       alert('Lien copié dans le presse-papiers !');
     });
   }
+
+  // Init au chargement
+  initAuth();
 </script>
 </body>
 </html>

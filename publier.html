@@ -240,7 +240,11 @@
 
 <nav>
   <a href="index.html" class="logo"><span class="i">I-</span><span class="d">Djassa</span></a>
-  <a href="annonces.html" class="nav-back">← Retour aux annonces</a>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <span id="nav-user-info" style="font-size:0.85rem;color:var(--text-muted)"></span>
+    <button onclick="logout()" style="background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);padding:0.4rem 0.9rem;border-radius:100px;font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Déconnexion</button>
+    <a href="annonces.html" class="nav-back">← Retour aux annonces</a>
+  </div>
 </nav>
 
 <div class="page-wrapper">
@@ -441,6 +445,31 @@
 </div>
 
 <script>
+  // ========== AUTH GUARD ==========
+  function getUser() {
+    try { return JSON.parse(sessionStorage.getItem('idjassa_user')); } catch { return null; }
+  }
+
+  function initAuth() {
+    const user = getUser();
+    if (!user) {
+      // Pas connecté → redirection vers inscription avec retour prévu
+      sessionStorage.setItem('idjassa_redirect', 'publier.html');
+      window.location.href = 'inscription.html?next=publier.html';
+      return;
+    }
+    // Connecté → afficher le nom dans la nav
+    const navInfo = document.getElementById('nav-user-info');
+    if (navInfo) navInfo.textContent = '👤 ' + user.prenom;
+  }
+
+  function logout() {
+    sessionStorage.removeItem('idjassa_user');
+    window.location.href = 'index.html';
+  }
+
+  initAuth();
+
   function updateCharCount(el, countId, max) {
     document.getElementById(countId).textContent = el.value.length;
   }
