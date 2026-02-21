@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion / Inscription — I-Djassa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #F4722B; --orange-light: #FF9A5C; --orange-dark: #C4511A;
+      --green: #1A7A4A; --green-light: #2AAD68;
+      --dark: #0F0E0C; --dark-2: #1C1A16; --dark-3: #2A2720;
+      --text-muted: #8A8070; --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark); color: var(--white);
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+
+    .auth-layout {
+      flex: 1; display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+      background: linear-gradient(160deg, var(--orange-dark) 0%, var(--orange) 40%, #FF9A5C 100%);
+      padding: 3rem; display: flex; flex-direction: column;
+      justify-content: space-between; position: relative; overflow: hidden;
+    }
+    .left-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='40' cy='40' r='2' fill='white' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .left-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem;
+      color: var(--white); text-decoration: none; position: relative;
+    }
+    .left-content { position: relative; }
+    .left-content h2 {
+      font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800;
+      line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.2rem;
+    }
+    .left-content p {
+      font-size: 1rem; opacity: 0.85; line-height: 1.7; margin-bottom: 2rem;
+    }
+    .features { display: flex; flex-direction: column; gap: 0.8rem; }
+    .feature {
+      display: flex; align-items: center; gap: 0.7rem;
+      font-size: 0.9rem; opacity: 0.9;
+    }
+    .feature-icon {
+      width: 32px; height: 32px; background: rgba(255,255,255,0.2);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .left-footer {
+      font-size: 0.82rem; opacity: 0.7; position: relative;
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      background: var(--dark-2);
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .auth-box { width: 100%; max-width: 400px; }
+
+    /* TABS */
+    .auth-tabs {
+      display: flex; background: var(--dark-3);
+      border-radius: 12px; padding: 4px; margin-bottom: 2rem;
+    }
+    .auth-tab {
+      flex: 1; padding: 0.6rem; border: none; border-radius: 9px;
+      background: none; color: rgba(255,255,255,0.5); font-size: 0.88rem;
+      font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .auth-tab.active { background: var(--dark-2); color: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+    .auth-title {
+      font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+    .auth-subtitle { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem; }
+
+    /* FORM */
+    .auth-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-label { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+    .form-label .required { color: var(--orange); }
+
+    .input-wrapper { position: relative; }
+    .form-input {
+      width: 100%; background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      padding: 0.75rem 1rem; color: var(--white); font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: var(--orange); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .input-icon {
+      position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); cursor: pointer; font-size: 1rem;
+    }
+
+    /* PHONE INPUT */
+    .phone-wrapper { display: flex; gap: 0.5rem; }
+    .country-code {
+      background: var(--dark-3); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 0.75rem 0.8rem; color: var(--white);
+      font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none;
+      cursor: pointer; white-space: nowrap; min-width: 90px;
+    }
+    .country-code option { background: var(--dark-2); }
+
+    /* OTP */
+    .otp-group { display: flex; gap: 0.6rem; justify-content: center; }
+    .otp-input {
+      width: 48px; height: 52px; text-align: center;
+      background: var(--dark-3); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; color: var(--white); font-size: 1.3rem; font-weight: 700;
+      font-family: 'Syne', sans-serif; outline: none; transition: border-color 0.2s;
+    }
+    .otp-input:focus { border-color: var(--orange); }
+
+    /* SEPARATOR */
+    .auth-sep {
+      display: flex; align-items: center; gap: 0.8rem;
+      color: var(--text-muted); font-size: 0.8rem; margin: 0.5rem 0;
+    }
+    .auth-sep::before, .auth-sep::after {
+      content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
+    }
+
+    /* SUBMIT BTN */
+    .btn-auth {
+      width: 100%; padding: 0.85rem; border-radius: 100px;
+      background: var(--orange); border: none; color: var(--white);
+      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(244,114,43,0.3);
+    }
+    .btn-auth:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    /* WHATSAPP BTN */
+    .btn-whatsapp {
+      width: 100%; padding: 0.75rem; border-radius: 100px;
+      background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.25);
+      color: #25D366; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .btn-whatsapp:hover { background: rgba(37, 211, 102, 0.2); }
+
+    .auth-link {
+      text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;
+    }
+    .auth-link a { color: var(--orange); text-decoration: none; font-weight: 600; }
+    .auth-link a:hover { text-decoration: underline; }
+
+    /* CGU */
+    .cgu-text {
+      font-size: 0.76rem; color: var(--text-muted); text-align: center; line-height: 1.5;
+    }
+    .cgu-text a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .cgu-text a:hover { color: var(--orange); }
+
+    /* STEP INDICATOR */
+    .step-dots {
+      display: flex; justify-content: center; gap: 0.4rem; margin-bottom: 1.5rem;
+    }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); transition: all 0.2s;
+    }
+    .step-dot.active { background: var(--orange); width: 24px; border-radius: 4px; }
+    .step-dot.done { background: var(--green); }
+
+    /* PANELS */
+    .auth-panel { display: none; }
+    .auth-panel.show { display: block; }
+
+    /* SMS info */
+    .sms-info {
+      background: rgba(244,114,43,0.08); border: 1px solid rgba(244,114,43,0.2);
+      border-radius: 10px; padding: 0.8rem 1rem;
+      font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.5;
+      display: flex; gap: 0.5rem; align-items: flex-start;
+    }
+
+    @media (max-width: 768px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: 2rem 1.5rem; align-items: flex-start; padding-top: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <a href="index.html" class="left-logo">I-Djassa</a>
+
+    <div class="left-content">
+      <h2>Achetez & vendez en toute confiance</h2>
+      <p>Rejoignez le grand marché ivoirien en ligne. Des milliers d'articles, des vendeurs vérifiés, zéro arnaque.</p>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">🪪</div>
+          <span>Identité vérifiée par CNI ou passeport</span>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📄</div>
+          <span>Preuves de propriété pour chaque annonce</span>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🆓</div>
+          <span>100% gratuit — aucun abonnement</span>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🇨🇮</div>
+          <span>Plateforme 100% ivoirienne</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-footer">© 2026 I-Djassa — Côte d'Ivoire</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="auth-box">
+
+      <!-- TABS -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
+        <button class="auth-tab" onclick="switchTab('register')">Inscription</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="auth-panel show" id="loginPanel">
+        <div class="auth-title">Bon retour ! 👋</div>
+        <div class="auth-subtitle">Connectez-vous à votre compte I-Djassa</div>
+
+        <div class="auth-form">
+          <div class="form-group">
+            <label class="form-label">Numéro de téléphone <span class="required">*</span></label>
+            <div class="phone-wrapper">
+              <select class="country-code">
+                <option value="+225">🇨🇮 +225</option>
+                <option value="+221">🇸🇳 +221</option>
+                <option value="+223">🇲🇱 +223</option>
+                <option value="+226">🇧🇫 +226</option>
+                <option value="+233">🇬🇭 +233</option>
+              </select>
+              <input type="tel" class="form-input" placeholder="07 XX XX XX XX" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mot de passe <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="password" class="form-input" placeholder="Votre mot de passe" id="loginPassword" />
+              <span class="input-icon" onclick="togglePassword('loginPassword')">👁️</span>
+            </div>
+          </div>
+
+          <div style="text-align:right">
+            <a href="#" style="color:var(--orange);font-size:0.82rem;text-decoration:none">Mot de passe oublié ?</a>
+          </div>
+
+          <button class="btn-auth" onclick="showOTP()">Se connecter →</button>
+
+          <div class="auth-sep">ou</div>
+
+          <button class="btn-whatsapp">
+            <span>💬</span> Connexion via WhatsApp
+          </button>
+        </div>
+
+        <div class="auth-link" style="margin-top:1.2rem">
+          Pas encore de compte ? <a href="#" onclick="switchTab('register')">S'inscrire gratuitement</a>
+        </div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-panel" id="registerPanel">
+
+        <!-- STEP 1: Infos de base -->
+        <div class="auth-panel show" id="regStep1">
+          <div class="step-dots">
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+          </div>
+
+          <div class="auth-title">Créer un compte 🚀</div>
+          <div class="auth-subtitle">Étape 1 sur 3 — Vos informations de base</div>
+
+          <div class="auth-form">
+            <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+              <div class="form-group">
+                <label class="form-label">Prénom <span class="required">*</span></label>
+                <input type="text" class="form-input" placeholder="Kouamé" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nom <span class="required">*</span></label>
+                <input type="text" class="form-input" placeholder="Konan" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Numéro de téléphone <span class="required">*</span></label>
+              <div class="phone-wrapper">
+                <select class="country-code">
+                  <option value="+225">🇨🇮 +225</option>
+                  <option value="+221">🇸🇳 +221</option>
+                  <option value="+223">🇲🇱 +223</option>
+                  <option value="+226">🇧🇫 +226</option>
+                  <option value="+233">🇬🇭 +233</option>
+                </select>
+                <input type="tel" class="form-input" placeholder="07 XX XX XX XX" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Mot de passe <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <input type="password" class="form-input" placeholder="Minimum 8 caractères" id="regPassword" />
+                <span class="input-icon" onclick="togglePassword('regPassword')">👁️</span>
+              </div>
+            </div>
+
+            <button class="btn-auth" onclick="showRegStep2()">Continuer →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Vérification SMS -->
+        <div class="auth-panel" id="regStep2">
+          <div class="step-dots">
+            <div class="step-dot done"></div>
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+          </div>
+
+          <div class="auth-title">Vérification SMS 📱</div>
+          <div class="auth-subtitle">Étape 2 sur 3 — Confirmez votre numéro</div>
+
+          <div class="auth-form">
+            <div class="sms-info">
+              <span>📨</span>
+              <span>Un code à 4 chiffres a été envoyé au <strong>+225 07 XX XX XX XX</strong>. Valable 10 minutes.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="text-align:center">Entrez le code reçu par SMS</label>
+              <div class="otp-group">
+                <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'otp1')" id="otp0" />
+                <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'otp2')" id="otp1" />
+                <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'otp3')" id="otp2" />
+                <input type="text" class="otp-input" maxlength="1" id="otp3" />
+              </div>
+            </div>
+
+            <button class="btn-auth" onclick="showRegStep3()">Vérifier le code →</button>
+
+            <div class="auth-link">
+              Pas reçu ? <a href="#">Renvoyer le code</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: KYC -->
+        <div class="auth-panel" id="regStep3">
+          <div class="step-dots">
+            <div class="step-dot done"></div>
+            <div class="step-dot done"></div>
+            <div class="step-dot active"></div>
+          </div>
+
+          <div class="auth-title">Vérification KYC 🪪</div>
+          <div class="auth-subtitle">Étape 3 sur 3 — Vérifiez votre identité (optionnel)</div>
+
+          <div class="auth-form">
+            <div class="sms-info" style="background:rgba(26,122,74,0.08);border-color:rgba(26,122,74,0.2)">
+              <span>🛡️</span>
+              <span>La vérification KYC est optionnelle mais vous donne le badge <strong>🥈 Vérifié</strong> et inspire confiance aux acheteurs.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Type de pièce d'identité</label>
+              <select class="form-input" style="cursor:pointer">
+                <option value="">Choisir</option>
+                <option>Carte Nationale d'Identité (CNI)</option>
+                <option>Passeport</option>
+                <option>Carte de résident</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Photo recto de la pièce</label>
+              <div style="border:2px dashed rgba(255,255,255,0.12);border-radius:10px;padding:1.2rem;text-align:center;cursor:pointer;background:var(--dark-3)" onclick="document.getElementById('cniRecto').click()">
+                <input type="file" id="cniRecto" accept="image/*" style="display:none" />
+                <div style="font-size:1.5rem;margin-bottom:0.3rem">🪪</div>
+                <div style="font-size:0.82rem;color:var(--text-muted)">Cliquez pour ajouter la photo recto</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Selfie avec la pièce d'identité</label>
+              <div style="border:2px dashed rgba(255,255,255,0.12);border-radius:10px;padding:1.2rem;text-align:center;cursor:pointer;background:var(--dark-3)" onclick="document.getElementById('selfie').click()">
+                <input type="file" id="selfie" accept="image/*" style="display:none" />
+                <div style="font-size:1.5rem;margin-bottom:0.3rem">🤳</div>
+                <div style="font-size:0.82rem;color:var(--text-muted)">Photo de vous tenant votre CNI visible</div>
+              </div>
+            </div>
+
+            <button class="btn-auth" onclick="finishRegister()">Terminer l'inscription →</button>
+
+            <div class="auth-link">
+              <a href="annonces.html" style="color:var(--text-muted)">Passer cette étape pour l'instant</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-link" style="margin-top:1.2rem">
+          Déjà un compte ? <a href="#" onclick="switchTab('login')">Se connecter</a>
+        </div>
+
+        <div class="cgu-text" style="margin-top:1rem">
+          En vous inscrivant, vous acceptez nos <a href="#">Conditions d'utilisation</a> et notre <a href="#">Politique de confidentialité</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="successOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center">
+  <div style="background:var(--dark-2);border:1px solid rgba(26,122,74,0.3);border-radius:24px;padding:3rem;text-align:center;max-width:380px;animation:popIn 0.4s ease">
+    <div style="font-size:4rem;margin-bottom:1rem">🎉</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:0.5rem">Bienvenue sur I-Djassa !</div>
+    <div style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;margin-bottom:2rem">Votre compte est créé. Vous pouvez maintenant publier vos annonces et contacter des vendeurs.</div>
+    <a href="annonces.html" style="display:block;padding:0.85rem;border-radius:100px;background:var(--orange);color:var(--white);text-decoration:none;font-weight:700;font-size:0.95rem">Explorer les annonces →</a>
+  </div>
+</div>
+
+<style>
+  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-panel[id$="Panel"]').forEach(p => p.classList.remove('show'));
+    if (tab === 'login') {
+      document.querySelectorAll('.auth-tab')[0].classList.add('active');
+      document.getElementById('loginPanel').classList.add('show');
+    } else {
+      document.querySelectorAll('.auth-tab')[1].classList.add('active');
+      document.getElementById('registerPanel').classList.add('show');
+      showRegStep(1);
+    }
+  }
+
+  function showRegStep(n) {
+    document.querySelectorAll('[id^="regStep"]').forEach(p => p.classList.remove('show'));
+    document.getElementById('regStep' + n).classList.add('show');
+  }
+
+  function showRegStep2() { showRegStep(2); }
+  function showRegStep3() { showRegStep(3); }
+
+  function showOTP() {
+    window.location.href = 'annonces.html';
+  }
+
+  function finishRegister() {
+    document.getElementById('successOverlay').style.display = 'flex';
+  }
+
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function moveToNext(el, nextId) {
+    if (el.value.length === 1) {
+      const next = document.getElementById(nextId);
+      if (next) next.focus();
+    }
+  }
+</script>
+</body>
+</html>
