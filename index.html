@@ -703,10 +703,11 @@
     <span class="i">I-</span><span class="djassa">Djassa</span>
   </div>
   <ul class="nav-links">
-    <li><a href="#categories">Catégories</a></li>
+    <li><a href="annonces.html">Annonces</a></li>
     <li><a href="#comment">Comment ça marche</a></li>
     <li><a href="#confiance">Confiance & Sécurité</a></li>
-    <li><a href="#" class="nav-cta">Publier une annonce</a></li>
+    <li><a href="inscription.html">Connexion</a></li>
+    <li><a href="publier.html" class="nav-cta">Publier une annonce</a></li>
   </ul>
 </nav>
 
@@ -726,13 +727,13 @@
   </p>
 
   <div class="search-bar">
-    <input type="text" placeholder="Rechercher un article, une marque..." />
-    <button class="search-btn">🔍 Rechercher</button>
+    <input type="text" placeholder="Rechercher un article, une marque..." id="heroSearch" />
+    <button class="search-btn" onclick="window.location.href='annonces.html?q='+document.getElementById('heroSearch').value">🔍 Rechercher</button>
   </div>
 
   <div class="hero-actions" style="margin-top: 1.5rem;">
-    <a href="#" class="btn-primary">📦 Publier une annonce</a>
-    <a href="#categories" class="btn-secondary">Parcourir les annonces →</a>
+    <a href="publier.html" class="btn-primary">📦 Publier une annonce</a>
+    <a href="annonces.html" class="btn-secondary">Parcourir les annonces →</a>
   </div>
 
   <div class="hero-stats">
@@ -760,62 +761,62 @@
   <p class="section-subtitle">Des milliers d'articles dans toutes les catégories, près de chez vous.</p>
 
   <div class="categories-grid">
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=tel">
       <span class="cat-icon">📱</span>
       <span class="cat-name">Téléphones & Tablettes</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=info">
       <span class="cat-icon">💻</span>
       <span class="cat-name">Informatique</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=elec">
       <span class="cat-icon">📺</span>
       <span class="cat-name">Électroménager</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=mode">
       <span class="cat-icon">👗</span>
       <span class="cat-name">Mode & Vêtements</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=auto">
       <span class="cat-icon">🚗</span>
       <span class="cat-name">Véhicules</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=immo">
       <span class="cat-icon">🏠</span>
       <span class="cat-name">Immobilier</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=mob">
       <span class="cat-icon">🛋️</span>
       <span class="cat-name">Maison & Jardin</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=jeux">
       <span class="cat-icon">🎮</span>
       <span class="cat-name">Jeux & Loisirs</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=cuisine">
       <span class="cat-icon">🍳</span>
       <span class="cat-name">Cuisine</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=livres">
       <span class="cat-icon">📚</span>
       <span class="cat-name">Livres & Éducation</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=beaute">
       <span class="cat-icon">💄</span>
       <span class="cat-name">Beauté & Santé</span>
       <span class="cat-count">Bientôt disponible</span>
     </a>
-    <a class="cat-card" href="#">
+    <a class="cat-card" href="annonces.html?cat=outils">
       <span class="cat-icon">⚙️</span>
       <span class="cat-name">Outillage</span>
       <span class="cat-count">Bientôt disponible</span>
@@ -831,7 +832,7 @@
     <p class="section-subtitle">Exemples d'annonces sur I-Djassa</p>
 
     <div class="annonces-grid">
-      <div class="annonce-card">
+      <a href="annonces.html" class="annonce-card" style="text-decoration:none;color:inherit">
         <div class="annonce-img">📱</div>
         <div class="annonce-body">
           <div class="annonce-cat">Téléphones</div>
@@ -842,9 +843,9 @@
             <span class="annonce-badge">✅ Vérifié</span>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="annonce-card">
+      <a href="annonces.html" class="annonce-card" style="text-decoration:none;color:inherit">
         <div class="annonce-img">💻</div>
         <div class="annonce-body">
           <div class="annonce-cat">Informatique</div>
@@ -855,9 +856,9 @@
             <span class="annonce-badge">✅ Vérifié</span>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="annonce-card">
+      <a href="annonces.html" class="annonce-card" style="text-decoration:none;color:inherit">
         <div class="annonce-img">📺</div>
         <div class="annonce-body">
           <div class="annonce-cat">Électroménager</div>
@@ -868,9 +869,9 @@
             <span class="annonce-badge">✅ Vérifié</span>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="annonce-card">
+      <a href="annonces.html" class="annonce-card" style="text-decoration:none;color:inherit">
         <div class="annonce-img">🛋️</div>
         <div class="annonce-body">
           <div class="annonce-cat">Mobilier</div>
@@ -881,7 +882,7 @@
             <span class="annonce-badge">✅ Vérifié</span>
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
@@ -973,7 +974,7 @@
 <section class="cta-section">
   <h2>Rejoignez I-Djassa dès maintenant</h2>
   <p>Gratuit pour toujours. Sécurisé. 100% Ivoirien.</p>
-  <a href="#" class="btn-white">🚀 Créer mon compte gratuitement</a>
+  <a href="inscription.html" class="btn-white">🚀 Créer mon compte gratuitement</a>
 </section>
 
 <!-- FOOTER -->
