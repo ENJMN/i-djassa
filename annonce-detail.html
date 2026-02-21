@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Samsung Galaxy A54 — I-Djassa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #F4722B; --orange-light: #FF9A5C; --orange-dark: #C4511A;
+      --green: #1A7A4A; --green-light: #2AAD68;
+      --dark: #0F0E0C; --dark-2: #1C1A16; --dark-3: #2A2720;
+      --text-muted: #8A8070; --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--white); }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(15,14,12,0.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(244,114,43,0.15);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; text-decoration: none; }
+    .logo .i { color: var(--orange); } .logo .d { color: var(--white); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .btn-publier {
+      background: var(--orange); color: var(--white); border: none;
+      padding: 0.55rem 1.2rem; border-radius: 100px;
+      font-size: 0.88rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .btn-publier:hover { background: var(--orange-dark); }
+    .nav-link { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--white); }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      max-width: 1200px; margin: 0 auto;
+      padding: 1rem 2rem 0;
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.82rem; color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--orange); }
+    .breadcrumb span { color: rgba(255,255,255,0.4); }
+
+    /* PAGE LAYOUT */
+    .page-wrapper { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ===== LEFT COLUMN ===== */
+
+    /* GALLERY */
+    .gallery { margin-bottom: 1.5rem; }
+
+    .gallery-main {
+      width: 100%; height: 420px;
+      background: var(--dark-2);
+      border-radius: 16px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8rem; border: 1px solid rgba(255,255,255,0.06);
+      position: relative; cursor: zoom-in;
+    }
+
+    .gallery-main .badge-overlay {
+      position: absolute; top: 1rem; left: 1rem;
+      display: flex; gap: 0.5rem;
+    }
+
+    .gallery-main .fav-overlay {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(0,0,0,0.5); border: none; border-radius: 50%;
+      width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .gallery-main .fav-overlay:hover { background: rgba(244,114,43,0.8); }
+
+    .gallery-nav {
+      position: absolute; bottom: 1rem; right: 1rem;
+      display: flex; gap: 0.4rem;
+    }
+    .gallery-nav button {
+      background: rgba(0,0,0,0.5); border: none; border-radius: 50%;
+      width: 36px; height: 36px; color: var(--white); cursor: pointer;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .gallery-nav button:hover { background: var(--orange); }
+
+    .gallery-thumbs {
+      display: flex; gap: 0.7rem; margin-top: 0.8rem; overflow-x: auto;
+      padding-bottom: 0.3rem;
+    }
+    .gallery-thumbs::-webkit-scrollbar { height: 4px; }
+    .gallery-thumbs::-webkit-scrollbar-track { background: var(--dark-2); }
+    .gallery-thumbs::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+
+    .thumb {
+      flex-shrink: 0; width: 80px; height: 80px;
+      background: var(--dark-2); border-radius: 10px;
+      border: 2px solid transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; transition: all 0.15s;
+    }
+    .thumb.active { border-color: var(--orange); }
+    .thumb:hover { border-color: rgba(244,114,43,0.5); }
+
+    /* ANNONCE INFO */
+    .annonce-info { background: var(--dark-2); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.06); }
+
+    .annonce-cat-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(244,114,43,0.1); border: 1px solid rgba(244,114,43,0.2);
+      color: var(--orange); border-radius: 100px;
+      padding: 0.25rem 0.8rem; font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.8rem;
+    }
+
+    .annonce-title {
+      font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800;
+      letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.8rem;
+    }
+
+    .annonce-meta {
+      display: flex; align-items: center; gap: 1.2rem;
+      flex-wrap: wrap; margin-bottom: 1rem;
+    }
+    .meta-item {
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.82rem; color: var(--text-muted);
+    }
+
+    .annonce-price-big {
+      font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800;
+      color: var(--orange); letter-spacing: -0.02em;
+    }
+    .price-neg {
+      font-size: 0.78rem; color: var(--green-light); font-weight: 600;
+      background: rgba(26,122,74,0.12); border: 1px solid rgba(26,122,74,0.25);
+      padding: 0.2rem 0.6rem; border-radius: 100px; margin-left: 0.8rem;
+    }
+
+    /* ETAT BADGE */
+    .etat-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.82rem; font-weight: 600;
+      background: rgba(42,173,104,0.1); border: 1px solid rgba(42,173,104,0.25);
+      color: var(--green-light); margin-top: 0.8rem;
+    }
+
+    /* DESCRIPTION */
+    .desc-card { background: var(--dark-2); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.06); }
+    .card-title {
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .desc-text { color: rgba(255,255,255,0.7); font-size: 0.92rem; line-height: 1.8; }
+
+    /* SPECS */
+    .specs-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.5rem;
+    }
+    .spec-item {
+      background: var(--dark-3); border-radius: 10px; padding: 0.8rem 1rem;
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    .spec-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .spec-value { font-size: 0.9rem; font-weight: 600; }
+
+    /* PREUVE */
+    .preuve-card {
+      background: rgba(26,122,74,0.06); border: 1px solid rgba(26,122,74,0.2);
+      border-radius: 16px; padding: 1.2rem 1.5rem; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .preuve-icon { font-size: 2rem; flex-shrink: 0; }
+    .preuve-info h4 { font-size: 0.92rem; font-weight: 700; color: var(--green-light); margin-bottom: 0.2rem; }
+    .preuve-info p { font-size: 0.8rem; color: var(--text-muted); }
+    .preuve-btn {
+      margin-left: auto; padding: 0.4rem 1rem; border-radius: 100px;
+      background: rgba(26,122,74,0.15); border: 1px solid rgba(26,122,74,0.3);
+      color: var(--green-light); font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: all 0.2s;
+    }
+    .preuve-btn:hover { background: rgba(26,122,74,0.25); }
+
+    /* ANNONCES SIMILAIRES */
+    .similaires-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;
+    }
+    .sim-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; overflow: hidden; cursor: pointer;
+      text-decoration: none; color: var(--white); display: block;
+      transition: all 0.2s;
+    }
+    .sim-card:hover { transform: translateY(-3px); border-color: rgba(244,114,43,0.25); }
+    .sim-img { height: 120px; background: var(--dark-3); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+    .sim-body { padding: 0.8rem; }
+    .sim-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.3rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .sim-price { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--orange); }
+
+    /* ===== RIGHT COLUMN (STICKY) ===== */
+    .right-col { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 1rem; }
+
+    /* CONTACT CARD */
+    .contact-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px; padding: 1.5rem; overflow: hidden; position: relative;
+    }
+    .contact-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    }
+
+    .price-display {
+      margin-bottom: 1.2rem;
+    }
+    .price-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+    .price-big { font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--orange); }
+    .price-neg-tag { font-size: 0.75rem; color: var(--green-light); background: rgba(26,122,74,0.12); border: 1px solid rgba(26,122,74,0.25); padding: 0.15rem 0.5rem; border-radius: 100px; margin-left: 0.5rem; }
+
+    .btn-whatsapp {
+      width: 100%; padding: 0.9rem; border-radius: 12px;
+      background: #25D366; border: none; color: var(--white);
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      transition: all 0.2s; margin-bottom: 0.7rem;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+    }
+    .btn-whatsapp:hover { background: #1ea952; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(37,211,102,0.4); }
+
+    .btn-call {
+      width: 100%; padding: 0.8rem; border-radius: 12px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white); font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all 0.2s; margin-bottom: 0.7rem;
+    }
+    .btn-call:hover { background: rgba(255,255,255,0.1); }
+
+    .btn-signaler {
+      width: 100%; padding: 0.6rem; border-radius: 10px;
+      background: none; border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-muted); font-size: 0.8rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-signaler:hover { border-color: rgba(255,100,100,0.3); color: #FF6B6B; }
+
+    .safety-tip {
+      margin-top: 1rem; padding: 0.8rem; background: rgba(244,114,43,0.06);
+      border: 1px solid rgba(244,114,43,0.15); border-radius: 10px;
+      font-size: 0.78rem; color: rgba(255,255,255,0.55); line-height: 1.6;
+      display: flex; gap: 0.5rem;
+    }
+
+    /* SELLER CARD */
+    .seller-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px; padding: 1.5rem;
+    }
+    .seller-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .seller-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; font-family: 'Syne', sans-serif;
+      flex-shrink: 0;
+    }
+    .seller-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .seller-since { font-size: 0.75rem; color: var(--text-muted); }
+
+    .seller-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .badge-item {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.72rem; font-weight: 600;
+    }
+    .badge-gold { background: rgba(255,215,0,0.12); color: #FFD700; border: 1px solid rgba(255,215,0,0.25); }
+    .badge-kyc { background: rgba(26,122,74,0.12); color: var(--green-light); border: 1px solid rgba(26,122,74,0.25); }
+    .badge-phone { background: rgba(100,160,255,0.12); color: #64A0FF; border: 1px solid rgba(100,160,255,0.25); }
+
+    .seller-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+    .seller-stat {
+      text-align: center; background: var(--dark-3); border-radius: 10px; padding: 0.7rem 0.3rem;
+    }
+    .seller-stat-num { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--orange); }
+    .seller-stat-label { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    .btn-voir-profil {
+      width: 100%; padding: 0.65rem; border-radius: 10px;
+      background: none; border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .btn-voir-profil:hover { border-color: var(--orange); color: var(--orange); }
+
+    /* SHARE */
+    .share-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 1.2rem;
+    }
+    .share-title { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 0.8rem; }
+    .share-btns { display: flex; gap: 0.5rem; }
+    .share-btn {
+      flex: 1; padding: 0.5rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1); background: none;
+      color: rgba(255,255,255,0.6); font-size: 0.78rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+    }
+    .share-btn:hover { background: rgba(255,255,255,0.06); color: var(--white); }
+
+    /* TRUST BADGE */
+    .trust-badge {
+      background: rgba(26,122,74,0.06); border: 1px solid rgba(26,122,74,0.2);
+      border-radius: 16px; padding: 1.2rem;
+      display: flex; align-items: flex-start; gap: 0.8rem;
+    }
+    .trust-badge-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .trust-badge-text h4 { font-size: 0.88rem; font-weight: 700; color: var(--green-light); margin-bottom: 0.2rem; }
+    .trust-badge-text p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+    @media (max-width: 900px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .right-col { position: static; }
+      .gallery-main { height: 280px; font-size: 5rem; }
+    }
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 1rem; }
+      .annonce-title { font-size: 1.3rem; }
+      .specs-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><span class="i">I-</span><span class="d">Djassa</span></a>
+  <div class="nav-right">
+    <a href="annonces.html" class="nav-link">← Retour aux annonces</a>
+    <a href="publier.html" class="btn-publier">+ Publier</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="index.html">Accueil</a>
+  <span>›</span>
+  <a href="annonces.html">Annonces</a>
+  <span>›</span>
+  <a href="annonces.html?cat=tel">Téléphones</a>
+  <span>›</span>
+  Samsung Galaxy A54
+</div>
+
+<div class="page-wrapper">
+  <div class="detail-grid">
+
+    <!-- ===== LEFT ===== -->
+    <div class="left-col">
+
+      <!-- GALERIE -->
+      <div class="gallery">
+        <div class="gallery-main" id="mainImg">
+          <span id="mainEmoji">📱</span>
+          <div class="gallery-main badge-overlay">
+            <span style="background:rgba(255,215,0,0.9);color:#7A5500;padding:0.2rem 0.6rem;border-radius:100px;font-size:0.72rem;font-weight:700">🥇 Certifié</span>
+            <span style="background:rgba(26,122,74,0.9);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;font-size:0.72rem;font-weight:700">✅ Vérifié KYC</span>
+          </div>
+          <button class="fav-overlay" id="favBtn" onclick="toggleFav()">🤍</button>
+          <div class="gallery-nav">
+            <button onclick="prevImg()">‹</button>
+            <button onclick="nextImg()">›</button>
+          </div>
+        </div>
+
+        <div class="gallery-thumbs">
+          <div class="thumb active" onclick="setImg(0, '📱')">📱</div>
+          <div class="thumb" onclick="setImg(1, '🔋')">🔋</div>
+          <div class="thumb" onclick="setImg(2, '📲')">📲</div>
+          <div class="thumb" onclick="setImg(3, '🖥️')">🖥️</div>
+          <div class="thumb" onclick="setImg(4, '📦')">📦</div>
+        </div>
+      </div>
+
+      <!-- INFOS PRINCIPALES -->
+      <div class="annonce-info">
+        <div class="annonce-cat-badge">📱 Téléphones & Tablettes</div>
+        <div class="annonce-title">Samsung Galaxy A54 128Go — Très bon état</div>
+
+        <div class="annonce-meta">
+          <span class="meta-item">📍 Cocody, Abidjan</span>
+          <span class="meta-item">🕐 Publié il y a 2 heures</span>
+          <span class="meta-item">👁️ 47 vues</span>
+        </div>
+
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <span class="annonce-price-big">120 000 FCFA</span>
+          <span class="price-neg">Négociable</span>
+        </div>
+
+        <div class="etat-badge">✨ Très bon état</div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="desc-card">
+        <div class="card-title">📝 Description</div>
+        <div class="desc-text">
+          Je vends mon Samsung Galaxy A54 128Go en très bon état. L'écran est impeccable, sans rayures ni fissures. La batterie tient encore très bien la journée complète. Toutes les fonctions marchent parfaitement : caméra, WiFi, Bluetooth, 4G.<br><br>
+          Je vends car j'ai reçu un nouveau téléphone en cadeau. L'appareil a toujours été dans une coque de protection et une vitre protectrice.<br><br>
+          <strong>Inclus avec l'appareil :</strong> chargeur original, câble USB-C, boîte d'origine.<br><br>
+          Disponible pour remise en main propre à Cocody ou Plateau. Je ne livre pas.
+        </div>
+      </div>
+
+      <!-- CARACTÉRISTIQUES -->
+      <div class="desc-card">
+        <div class="card-title">⚙️ Caractéristiques</div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Marque</span>
+            <span class="spec-value">Samsung</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Modèle</span>
+            <span class="spec-value">Galaxy A54</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Stockage</span>
+            <span class="spec-value">128 Go</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">8 Go</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Couleur</span>
+            <span class="spec-value">Noir</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Réseau</span>
+            <span class="spec-value">4G / Dual SIM</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">État</span>
+            <span class="spec-value">Très bon état</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Garantie</span>
+            <span class="spec-value">Aucune</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREUVE DE PROPRIÉTÉ -->
+      <div class="preuve-card">
+        <div class="preuve-icon">🧾</div>
+        <div class="preuve-info">
+          <h4>Preuve de propriété fournie</h4>
+          <p>Le vendeur a joint un reçu d'achat et une photo avec sa CNI. Article certifié comme propriété légitime du vendeur.</p>
+        </div>
+        <button class="preuve-btn">Voir le reçu</button>
+      </div>
+
+      <!-- ANNONCES SIMILAIRES -->
+      <div class="desc-card">
+        <div class="card-title">🔁 Annonces similaires</div>
+        <div class="similaires-grid">
+          <a href="annonce-detail.html" class="sim-card">
+            <div class="sim-img">📱</div>
+            <div class="sim-body">
+              <div class="sim-title">iPhone 13 Pro 256Go</div>
+              <div class="sim-price">450 000 FCFA</div>
+            </div>
+          </a>
+          <a href="annonce-detail.html" class="sim-card">
+            <div class="sim-img">📱</div>
+            <div class="sim-body">
+              <div class="sim-title">Xiaomi Redmi Note 12</div>
+              <div class="sim-price">85 000 FCFA</div>
+            </div>
+          </a>
+          <a href="annonce-detail.html" class="sim-card">
+            <div class="sim-img">📱</div>
+            <div class="sim-body">
+              <div class="sim-title">Samsung Galaxy S21 FE</div>
+              <div class="sim-price">200 000 FCFA</div>
+            </div>
+          </a>
+          <a href="annonce-detail.html" class="sim-card">
+            <div class="sim-img">📱</div>
+            <div class="sim-body">
+              <div class="sim-title">Oppo A78 128Go Neuf</div>
+              <div class="sim-price">110 000 FCFA</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== RIGHT ===== -->
+    <div class="right-col">
+
+      <!-- CONTACT -->
+      <div class="contact-card">
+        <div class="price-display">
+          <div class="price-label">Prix demandé</div>
+          <div>
+            <span class="price-big">120 000</span>
+            <span style="font-size:0.9rem;color:var(--text-muted);margin-left:0.3rem">FCFA</span>
+            <span class="price-neg-tag">Négociable</span>
+          </div>
+        </div>
+
+        <button class="btn-whatsapp" onclick="contactWhatsApp()">
+          💬 Contacter sur WhatsApp
+        </button>
+
+        <button class="btn-call" onclick="callSeller()">
+          📞 Appeler le vendeur
+        </button>
+
+        <button class="btn-signaler">🚩 Signaler cette annonce</button>
+
+        <div class="safety-tip">
+          <span>⚠️</span>
+          <span>Rencontrez le vendeur dans un lieu public. Ne payez jamais à l'avance sans voir l'article.</span>
+        </div>
+      </div>
+
+      <!-- VENDEUR -->
+      <div class="seller-card">
+        <div class="seller-header">
+          <div class="seller-avatar">K</div>
+          <div>
+            <div class="seller-name">Kouamé Konan</div>
+            <div class="seller-since">Membre depuis janvier 2026</div>
+          </div>
+        </div>
+
+        <div class="seller-badges">
+          <span class="badge-item badge-gold">🥇 Certifié</span>
+          <span class="badge-item badge-kyc">✅ KYC vérifié</span>
+          <span class="badge-item badge-phone">📱 Tél. vérifié</span>
+        </div>
+
+        <div class="seller-stats">
+          <div class="seller-stat">
+            <div class="seller-stat-num">12</div>
+            <div class="seller-stat-label">Annonces</div>
+          </div>
+          <div class="seller-stat">
+            <div class="seller-stat-num">98%</div>
+            <div class="seller-stat-label">Fiabilité</div>
+          </div>
+          <div class="seller-stat">
+            <div class="seller-stat-num">4.8⭐</div>
+            <div class="seller-stat-label">Note</div>
+          </div>
+        </div>
+
+        <a href="profil-vendeur.html" class="btn-voir-profil">
+          👤 Voir le profil complet →
+        </a>
+      </div>
+
+      <!-- PARTAGE -->
+      <div class="share-card">
+        <div class="share-title">Partager cette annonce</div>
+        <div class="share-btns">
+          <button class="share-btn" onclick="shareWA()">💬 WhatsApp</button>
+          <button class="share-btn" onclick="shareFB()">📘 Facebook</button>
+          <button class="share-btn" onclick="copyLink()">🔗 Copier</button>
+        </div>
+      </div>
+
+      <!-- TRUST -->
+      <div class="trust-badge">
+        <div class="trust-badge-icon">🛡️</div>
+        <div class="trust-badge-text">
+          <h4>Annonce vérifiée par I-Djassa</h4>
+          <p>L'identité du vendeur et la propriété de cet article ont été vérifiées par notre équipe.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const imgs = ['📱', '🔋', '📲', '🖥️', '📦'];
+  let currentImg = 0;
+  let isFav = false;
+
+  function setImg(idx, emoji) {
+    currentImg = idx;
+    document.getElementById('mainEmoji').textContent = emoji;
+    document.querySelectorAll('.thumb').forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
+  }
+
+  function nextImg() {
+    const next = (currentImg + 1) % imgs.length;
+    setImg(next, imgs[next]);
+  }
+
+  function prevImg() {
+    const prev = (currentImg - 1 + imgs.length) % imgs.length;
+    setImg(prev, imgs[prev]);
+  }
+
+  function toggleFav() {
+    isFav = !isFav;
+    document.getElementById('favBtn').textContent = isFav ? '❤️' : '🤍';
+  }
+
+  function contactWhatsApp() {
+    const msg = encodeURIComponent("Bonjour, je suis intéressé par votre annonce *Samsung Galaxy A54 128Go* sur I-Djassa. Est-il encore disponible ?");
+    window.open('https://wa.me/2250700000000?text=' + msg, '_blank');
+  }
+
+  function callSeller() {
+    alert('Numéro du vendeur : +225 07 XX XX XX XX\n\n(En production, le numéro sera affiché après connexion)');
+  }
+
+  function shareWA() {
+    const msg = encodeURIComponent("Regarde cette annonce sur I-Djassa : Samsung Galaxy A54 128Go à 120 000 FCFA ! " + window.location.href);
+    window.open('https://wa.me/?text=' + msg, '_blank');
+  }
+
+  function shareFB() {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank');
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Lien copié dans le presse-papiers !');
+    });
+  }
+</script>
+</body>
+</html>

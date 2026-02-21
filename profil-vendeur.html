@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil — Kouamé Konan — I-Djassa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #F4722B; --orange-light: #FF9A5C; --orange-dark: #C4511A;
+      --green: #1A7A4A; --green-light: #2AAD68;
+      --dark: #0F0E0C; --dark-2: #1C1A16; --dark-3: #2A2720;
+      --text-muted: #8A8070; --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--white); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(15,14,12,0.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(244,114,43,0.15);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; text-decoration: none; }
+    .logo .i { color: var(--orange); } .logo .d { color: var(--white); }
+    .nav-right { display: flex; gap: 1rem; align-items: center; }
+    .btn-publier { background: var(--orange); color: var(--white); border: none; padding: 0.55rem 1.2rem; border-radius: 100px; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .nav-link { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.88rem; }
+
+    /* HERO PROFILE */
+    .profile-hero {
+      background: linear-gradient(160deg, var(--dark-2) 0%, var(--dark-3) 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: relative; overflow: hidden;
+    }
+    .profile-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(244,114,43,0.08) 0%, transparent 70%);
+    }
+
+    .profile-hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 2.5rem 2rem; position: relative;
+      display: flex; align-items: flex-start; gap: 2rem; flex-wrap: wrap;
+    }
+
+    .profile-avatar {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; font-weight: 800; font-family: 'Syne', sans-serif;
+      flex-shrink: 0; border: 3px solid rgba(244,114,43,0.3);
+      box-shadow: 0 0 30px rgba(244,114,43,0.2);
+    }
+
+    .profile-info { flex: 1; min-width: 200px; }
+    .profile-name {
+      font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 0.4rem;
+    }
+    .profile-meta {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.8rem;
+    }
+    .profile-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.3rem 0.8rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+    }
+    .bp-gold { background: rgba(255,215,0,0.12); color: #FFD700; border: 1px solid rgba(255,215,0,0.3); }
+    .bp-kyc { background: rgba(26,122,74,0.12); color: var(--green-light); border: 1px solid rgba(26,122,74,0.3); }
+    .bp-phone { background: rgba(100,160,255,0.12); color: #64A0FF; border: 1px solid rgba(100,160,255,0.3); }
+    .bp-preuve { background: rgba(180,100,255,0.12); color: #B464FF; border: 1px solid rgba(180,100,255,0.3); }
+
+    .profile-rating {
+      display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem;
+    }
+    .stars { color: #FFD700; font-size: 1rem; letter-spacing: 0.05em; }
+    .rating-count { color: var(--text-muted); }
+
+    .profile-actions { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-end; }
+    .btn-contact-wa {
+      padding: 0.7rem 1.5rem; border-radius: 100px;
+      background: #25D366; border: none; color: var(--white);
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap;
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: all 0.2s; box-shadow: 0 4px 20px rgba(37,211,102,0.25);
+    }
+    .btn-contact-wa:hover { background: #1ea952; transform: translateY(-1px); }
+    .btn-signaler-profil {
+      padding: 0.4rem 1rem; border-radius: 100px;
+      background: none; border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted); font-size: 0.78rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-signaler-profil:hover { border-color: rgba(255,100,100,0.3); color: #FF6B6B; }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--dark-2); border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .stats-bar-inner {
+      max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem;
+      display: flex; gap: 0; overflow-x: auto;
+    }
+    .stat-item {
+      flex: 1; min-width: 120px; text-align: center;
+      padding: 0.5rem 1rem; border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--orange); }
+    .stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    /* CONTENT */
+    .content-wrapper {
+      max-width: 1200px; margin: 0 auto; padding: 2rem;
+      display: grid; grid-template-columns: 1fr 300px; gap: 2rem; align-items: start;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 0; background: var(--dark-2);
+      border-radius: 12px; padding: 4px; margin-bottom: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .tab-btn {
+      flex: 1; padding: 0.6rem; border: none; border-radius: 9px;
+      background: none; color: rgba(255,255,255,0.5); font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { background: var(--dark-3); color: var(--white); }
+
+    /* ANNONCES GRID */
+    .annonces-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;
+    }
+    .annonce-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; overflow: hidden; cursor: pointer;
+      text-decoration: none; color: var(--white); display: block;
+      transition: all 0.25s;
+    }
+    .annonce-card:hover { transform: translateY(-4px); border-color: rgba(244,114,43,0.25); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+    .annonce-img { height: 150px; background: var(--dark-3); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .annonce-body { padding: 0.9rem; }
+    .annonce-cat { font-size: 0.7rem; color: var(--orange); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+    .annonce-title { font-weight: 600; font-size: 0.88rem; line-height: 1.3; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .annonce-price { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--orange); }
+    .annonce-foot { display: flex; justify-content: space-between; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.72rem; color: var(--text-muted); }
+
+    /* AVIS */
+    .avis-list { display: flex; flex-direction: column; gap: 1rem; }
+    .avis-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 1.2rem;
+    }
+    .avis-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.7rem; }
+    .avis-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--dark-3); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+    }
+    .avis-name { font-weight: 600; font-size: 0.88rem; }
+    .avis-date { font-size: 0.75rem; color: var(--text-muted); }
+    .avis-stars { color: #FFD700; font-size: 0.85rem; }
+    .avis-text { color: rgba(255,255,255,0.65); font-size: 0.88rem; line-height: 1.6; }
+
+    /* SIDEBAR DROITE */
+    .sidebar-right { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 80px; }
+
+    .info-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 1.2rem;
+    }
+    .info-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.8rem; }
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row-label { color: var(--text-muted); }
+    .info-row-value { font-weight: 600; }
+
+    .trust-levels { display: flex; flex-direction: column; gap: 0.5rem; }
+    .trust-level-item {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.6rem 0.8rem; border-radius: 10px;
+      background: var(--dark-3);
+    }
+    .tl-icon { font-size: 1.1rem; }
+    .tl-text { flex: 1; }
+    .tl-name { font-size: 0.82rem; font-weight: 600; }
+    .tl-desc { font-size: 0.72rem; color: var(--text-muted); }
+    .tl-check { color: var(--green-light); font-size: 1rem; }
+    .tl-pending { color: var(--text-muted); font-size: 0.75rem; }
+
+    @media (max-width: 900px) {
+      .content-wrapper { grid-template-columns: 1fr; }
+      .sidebar-right { position: static; }
+      .profile-hero-inner { flex-direction: column; }
+      .profile-actions { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><span class="i">I-</span><span class="d">Djassa</span></a>
+  <div class="nav-right">
+    <a href="annonces.html" class="nav-link">Annonces</a>
+    <a href="publier.html" class="btn-publier">+ Publier</a>
+  </div>
+</nav>
+
+<!-- HERO PROFIL -->
+<div class="profile-hero">
+  <div class="profile-hero-inner">
+    <div class="profile-avatar">K</div>
+
+    <div class="profile-info">
+      <div class="profile-name">Kouamé Konan</div>
+      <div class="profile-meta">
+        <span>📍 Cocody, Abidjan</span>
+        <span>📅 Membre depuis janvier 2026</span>
+        <span>👁️ Vu aujourd'hui</span>
+      </div>
+      <div class="profile-badges">
+        <span class="badge-pill bp-gold">🥇 Vendeur Certifié</span>
+        <span class="badge-pill bp-kyc">✅ Identité vérifiée</span>
+        <span class="badge-pill bp-phone">📱 Tél. vérifié</span>
+        <span class="badge-pill bp-preuve">📄 Preuves fournies</span>
+      </div>
+      <div class="profile-rating">
+        <span class="stars">★★★★★</span>
+        <strong>4.8</strong>
+        <span class="rating-count">(24 avis)</span>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn-contact-wa" onclick="contactWA()">💬 Contacter sur WhatsApp</button>
+      <button class="btn-signaler-profil">🚩 Signaler ce profil</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item">
+      <div class="stat-num">12</div>
+      <div class="stat-lbl">Annonces actives</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">38</div>
+      <div class="stat-lbl">Ventes réalisées</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4.8 ⭐</div>
+      <div class="stat-lbl">Note moyenne</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">98%</div>
+      <div class="stat-lbl">Taux de réponse</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">&lt; 1h</div>
+      <div class="stat-lbl">Délai de réponse</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENU -->
+<div class="content-wrapper">
+
+  <!-- GAUCHE -->
+  <div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this, 'annonces')">📦 Annonces (12)</button>
+      <button class="tab-btn" onclick="switchTab(this, 'avis')">⭐ Avis (24)</button>
+    </div>
+
+    <!-- ANNONCES -->
+    <div id="tab-annonces">
+      <div class="annonces-grid">
+        <a href="annonce-detail.html" class="annonce-card">
+          <div class="annonce-img">📱</div>
+          <div class="annonce-body">
+            <div class="annonce-cat">Téléphones</div>
+            <div class="annonce-title">Samsung Galaxy A54 128Go</div>
+            <div class="annonce-price">120 000 FCFA</div>
+            <div class="annonce-foot"><span>📍 Cocody</span><span>Il y a 2h</span></div>
+          </div>
+        </a>
+        <a href="annonce-detail.html" class="annonce-card">
+          <div class="annonce-img">💻</div>
+          <div class="annonce-body">
+            <div class="annonce-cat">Informatique</div>
+            <div class="annonce-title">Laptop Dell i5 8Go RAM</div>
+            <div class="annonce-price">185 000 FCFA</div>
+            <div class="annonce-foot"><span>📍 Cocody</span><span>Il y a 1j</span></div>
+          </div>
+        </a>
+        <a href="annonce-detail.html" class="annonce-card">
+          <div class="annonce-img">🎮</div>
+          <div class="annonce-body">
+            <div class="annonce-cat">Jeux</div>
+            <div class="annonce-title">PS4 Slim 1To + 3 jeux</div>
+            <div class="annonce-price">145 000 FCFA</div>
+            <div class="annonce-foot"><span>📍 Cocody</span><span>Il y a 2j</span></div>
+          </div>
+        </a>
+        <a href="annonce-detail.html" class="annonce-card">
+          <div class="annonce-img">📷</div>
+          <div class="annonce-body">
+            <div class="annonce-cat">Électronique</div>
+            <div class="annonce-title">Appareil photo Canon 200D</div>
+            <div class="annonce-price">220 000 FCFA</div>
+            <div class="annonce-foot"><span>📍 Cocody</span><span>Il y a 3j</span></div>
+          </div>
+        </a>
+        <a href="annonce-detail.html" class="annonce-card">
+          <div class="annonce-img">⌚</div>
+          <div class="annonce-body">
+            <div class="annonce-cat">Mode</div>
+            <div class="annonce-title">Montre Apple Watch Series 6</div>
+            <div class="annonce-price">95 000 FCFA</div>
+            <div class="annonce-foot"><span>📍 Cocody</span><span>Il y a 4j</span></div>
+          </div>
+        </a>
+        <a href="annonce-detail.html" class="annonce-card">
+          <div class="annonce-img">🎧</div>
+          <div class="annonce-body">
+            <div class="annonce-cat">Audio</div>
+            <div class="annonce-title">AirPods Pro 2ème génération</div>
+            <div class="annonce-price">55 000 FCFA</div>
+            <div class="annonce-foot"><span>📍 Cocody</span><span>Il y a 5j</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- AVIS -->
+    <div id="tab-avis" style="display:none">
+      <div class="avis-list">
+        <div class="avis-card">
+          <div class="avis-header">
+            <div class="avis-avatar">A</div>
+            <div style="flex:1">
+              <div class="avis-name">Aya Coulibaly</div>
+              <div class="avis-date">Il y a 3 jours</div>
+            </div>
+            <div class="avis-stars">★★★★★</div>
+          </div>
+          <div class="avis-text">Vendeur très sérieux. Le téléphone était exactement comme décrit. Remise en main propre rapide à Cocody. Je recommande vivement !</div>
+        </div>
+        <div class="avis-card">
+          <div class="avis-header">
+            <div class="avis-avatar">M</div>
+            <div style="flex:1">
+              <div class="avis-name">Moussa Traoré</div>
+              <div class="avis-date">Il y a 1 semaine</div>
+            </div>
+            <div class="avis-stars">★★★★★</div>
+          </div>
+          <div class="avis-text">Super expérience ! Kouamé a fourni tous les documents prouvant la propriété de l'article. Transaction sécurisée et rapide.</div>
+        </div>
+        <div class="avis-card">
+          <div class="avis-header">
+            <div class="avis-avatar">F</div>
+            <div style="flex:1">
+              <div class="avis-name">Fatoumata Diallo</div>
+              <div class="avis-date">Il y a 2 semaines</div>
+            </div>
+            <div class="avis-stars">★★★★☆</div>
+          </div>
+          <div class="avis-text">Bon vendeur, article conforme à la description. Léger retard au rendez-vous mais prévenu à l'avance. Bonne communication.</div>
+        </div>
+        <div class="avis-card">
+          <div class="avis-header">
+            <div class="avis-avatar">K</div>
+            <div style="flex:1">
+              <div class="avis-name">Koffi Assi</div>
+              <div class="avis-date">Il y a 3 semaines</div>
+            </div>
+            <div class="avis-stars">★★★★★</div>
+          </div>
+          <div class="avis-text">Excellent vendeur ! La PS4 était en parfait état et la facture d'achat était fournie. Transaction parfaite.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR DROITE -->
+  <div class="sidebar-right">
+
+    <div class="info-card">
+      <div class="info-card-title">Informations</div>
+      <div class="info-row">
+        <span class="info-row-label">Localisation</span>
+        <span class="info-row-value">Cocody, Abidjan</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Membre depuis</span>
+        <span class="info-row-value">Janvier 2026</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Dernière connexion</span>
+        <span class="info-row-value" style="color:var(--green-light)">Aujourd'hui</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Annonces vendues</span>
+        <span class="info-row-value">38</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Taux de réponse</span>
+        <span class="info-row-value" style="color:var(--green-light)">98%</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">Niveau de confiance</div>
+      <div class="trust-levels">
+        <div class="trust-level-item">
+          <span class="tl-icon">📱</span>
+          <div class="tl-text">
+            <div class="tl-name">Téléphone vérifié</div>
+            <div class="tl-desc">Numéro confirmé par SMS</div>
+          </div>
+          <span class="tl-check">✅</span>
+        </div>
+        <div class="trust-level-item">
+          <span class="tl-icon">🪪</span>
+          <div class="tl-text">
+            <div class="tl-name">Identité vérifiée</div>
+            <div class="tl-desc">CNI validée par notre équipe</div>
+          </div>
+          <span class="tl-check">✅</span>
+        </div>
+        <div class="trust-level-item">
+          <span class="tl-icon">🤳</span>
+          <div class="tl-text">
+            <div class="tl-name">Selfie avec CNI</div>
+            <div class="tl-desc">Photo de confirmation</div>
+          </div>
+          <span class="tl-check">✅</span>
+        </div>
+        <div class="trust-level-item">
+          <span class="tl-icon">📄</span>
+          <div class="tl-text">
+            <div class="tl-name">Preuves de propriété</div>
+            <div class="tl-desc">Reçus fournis sur les annonces</div>
+          </div>
+          <span class="tl-check">✅</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card" style="background:rgba(244,114,43,0.06);border-color:rgba(244,114,43,0.15)">
+      <div style="font-size:0.82rem;color:rgba(255,255,255,0.6);line-height:1.6">
+        <strong style="color:var(--orange)">⚠️ Conseil de sécurité</strong><br/>
+        Rencontrez toujours le vendeur dans un lieu public. Ne payez jamais à l'avance. Vérifiez l'article avant de payer.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function switchTab(btn, tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-annonces').style.display = tab === 'annonces' ? 'block' : 'none';
+    document.getElementById('tab-avis').style.display = tab === 'avis' ? 'block' : 'none';
+  }
+
+  function contactWA() {
+    const msg = encodeURIComponent("Bonjour Kouamé, j'ai vu votre profil sur I-Djassa et je souhaite vous contacter.");
+    window.open('https://wa.me/2250700000000?text=' + msg, '_blank');
+  }
+</script>
+</body>
+</html>
