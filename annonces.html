@@ -420,12 +420,36 @@
 
 <script src="api.js"></script>
 <script>
+  // ============================================================
+  // DONNÉES DE DÉMONSTRATION (utilisées si l'API est indisponible)
+  // ============================================================
+  const MOCK_ANNONCES = [
+    { id:'mock-1',  titre:"MacBook Pro M1 256Go",          categorie_slug:"info", categorie_nom:"Informatique",   categorie_emoji:"💻", prix:650000, negociable:false, ville:"Plateau, Abidjan",    vendeur_badge:"gold",   created_at: new Date(Date.now()-3*3600000).toISOString() },
+    { id:'mock-2',  titre:"TV LG 55 pouces 4K Smart",      categorie_slug:"elec", categorie_nom:"Électroménager", categorie_emoji:"📺", prix:280000, negociable:true,  ville:"Yopougon, Abidjan",   vendeur_badge:"silver", created_at: new Date(Date.now()-5*3600000).toISOString() },
+    { id:'mock-3',  titre:"Canapé 3 places cuir marron",   categorie_slug:"mob",  categorie_nom:"Mobilier",       categorie_emoji:"🛋️", prix:85000,  negociable:true,  ville:"Treichville, Abidjan",vendeur_badge:"bronze", created_at: new Date(Date.now()-8*3600000).toISOString() },
+    { id:'mock-4',  titre:"Réfrigérateur Samsung 300L",    categorie_slug:"elec", categorie_nom:"Électroménager", categorie_emoji:"📺", prix:195000, negociable:false, ville:"Bouaké",              vendeur_badge:"silver", created_at: new Date(Date.now()-10*3600000).toISOString() },
+    { id:'mock-5',  titre:"Laptop HP EliteBook i5 8Go",    categorie_slug:"info", categorie_nom:"Informatique",   categorie_emoji:"💻", prix:220000, negociable:true,  ville:"Adjamé, Abidjan",     vendeur_badge:"silver", created_at: new Date(Date.now()-12*3600000).toISOString() },
+    { id:'mock-6',  titre:"Robe soirée élégante T38",      categorie_slug:"mode", categorie_nom:"Mode",           categorie_emoji:"👗", prix:25000,  negociable:false, ville:"Cocody, Abidjan",     vendeur_badge:"bronze", created_at: new Date(Date.now()-24*3600000).toISOString() },
+    { id:'mock-7',  titre:"Toyota Corolla 2015 essence",   categorie_slug:"auto", categorie_nom:"Véhicules",      categorie_emoji:"🚗", prix:5500000,negociable:true,  ville:"Plateau, Abidjan",    vendeur_badge:"gold",   created_at: new Date(Date.now()-24*3600000).toISOString() },
+    { id:'mock-8',  titre:"Machine à laver Bosch 7kg",     categorie_slug:"elec", categorie_nom:"Électroménager", categorie_emoji:"📺", prix:165000, negociable:false, ville:"Yamoussoukro",        vendeur_badge:"silver", created_at: new Date(Date.now()-48*3600000).toISOString() },
+    { id:'mock-9',  titre:"iPad Air 5ème génération 64Go", categorie_slug:"info", categorie_nom:"Informatique",   categorie_emoji:"💻", prix:320000, negociable:false, ville:"Cocody, Abidjan",     vendeur_badge:"gold",   created_at: new Date(Date.now()-48*3600000).toISOString() },
+    { id:'mock-10', titre:"Climatiseur Midea 1.5 CV",      categorie_slug:"elec", categorie_nom:"Électroménager", categorie_emoji:"📺", prix:145000, negociable:true,  ville:"Bouaké",              vendeur_badge:"silver", created_at: new Date(Date.now()-72*3600000).toISOString() },
+    { id:'mock-11', titre:"Moto Yamaha FZ 2019",           categorie_slug:"auto", categorie_nom:"Véhicules",      categorie_emoji:"🚗", prix:1200000,negociable:true,  ville:"San-Pédro",           vendeur_badge:"silver", created_at: new Date(Date.now()-72*3600000).toISOString() },
+    { id:'mock-12', titre:"Table à manger 6 personnes",    categorie_slug:"mob",  categorie_nom:"Mobilier",       categorie_emoji:"🛋️", prix:120000, negociable:true,  ville:"Abobo, Abidjan",     vendeur_badge:"bronze", created_at: new Date(Date.now()-96*3600000).toISOString() },
+    { id:'mock-13', titre:"Chaussures Nike Air Max T43",   categorie_slug:"mode", categorie_nom:"Mode",           categorie_emoji:"👗", prix:35000,  negociable:false, ville:"Marcory, Abidjan",    vendeur_badge:"bronze", created_at: new Date(Date.now()-96*3600000).toISOString() },
+    { id:'mock-14', titre:"Dell XPS 15 i7 16Go RTX",       categorie_slug:"info", categorie_nom:"Informatique",   categorie_emoji:"💻", prix:890000, negociable:false, ville:"Plateau, Abidjan",    vendeur_badge:"gold",   created_at: new Date(Date.now()-120*3600000).toISOString() },
+    { id:'mock-15', titre:"Sac à main cuir véritable",     categorie_slug:"mode", categorie_nom:"Mode",           categorie_emoji:"👗", prix:180000, negociable:true,  ville:"Cocody, Abidjan",     vendeur_badge:"gold",   created_at: new Date(Date.now()-120*3600000).toISOString() },
+    { id:'mock-16', titre:"Four micro-ondes LG 25L",       categorie_slug:"elec", categorie_nom:"Électroménager", categorie_emoji:"📺", prix:55000,  negociable:false, ville:"Yopougon, Abidjan",   vendeur_badge:"bronze", created_at: new Date(Date.now()-144*3600000).toISOString() },
+    { id:'mock-17', titre:"Bureau en bois massif",         categorie_slug:"mob",  categorie_nom:"Mobilier",       categorie_emoji:"🛋️", prix:95000,  negociable:true,  ville:"Adjamé, Abidjan",    vendeur_badge:"silver", created_at: new Date(Date.now()-144*3600000).toISOString() },
+    { id:'mock-18', titre:"PS4 Slim 1To + 3 jeux",         categorie_slug:"jeux", categorie_nom:"Jeux & Loisirs", categorie_emoji:"🎮", prix:145000, negociable:true,  ville:"Cocody, Abidjan",     vendeur_badge:"silver", created_at: new Date(Date.now()-168*3600000).toISOString() },
+  ];
+
   let currentCategory = 'all';
   let currentPage = 1;
   let totalAnnonces = 0;
   const perPage = 12;
 
-  // Lire les params URL (ex: annonces.html?cat=info)
+  // Lire les params URL
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('cat')) currentCategory = urlParams.get('cat');
   if (urlParams.get('q')) document.getElementById('searchInput').value = urlParams.get('q');
@@ -444,22 +468,51 @@
     loadAnnonces();
   }
 
+  // Filtre les données mock côté client
+  function filterMock() {
+    let data = [...MOCK_ANNONCES];
+    const q     = document.getElementById('searchInput').value.toLowerCase();
+    const ville = document.getElementById('villeFilter').value.toLowerCase();
+    const min   = parseInt(document.getElementById('priceMin').value) || 0;
+    const max   = parseInt(document.getElementById('priceMax').value) || Infinity;
+    const sort  = document.getElementById('sortSelect').value;
+    const badge = getBadgeFilter();
+
+    if (currentCategory !== 'all') data = data.filter(a => a.categorie_slug === currentCategory);
+    if (q)     data = data.filter(a => a.titre.toLowerCase().includes(q));
+    if (ville) data = data.filter(a => a.ville.toLowerCase().includes(ville));
+    data = data.filter(a => a.prix >= min && a.prix <= max);
+    if (badge) data = data.filter(a => a.vendeur_badge === badge);
+
+    if (sort === 'price-asc')  data.sort((a,b) => a.prix - b.prix);
+    if (sort === 'price-desc') data.sort((a,b) => b.prix - a.prix);
+    if (sort === 'trust') {
+      const order = { gold:0, silver:1, bronze:2 };
+      data.sort((a,b) => order[a.vendeur_badge] - order[b.vendeur_badge]);
+    }
+    return data;
+  }
+
   async function loadAnnonces() {
     const grid = document.getElementById('annoncesGrid');
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted)">
       <div style="font-size:2rem;margin-bottom:0.5rem">⏳</div>Chargement...</div>`;
 
     try {
-      const data = await Annonces.getAll({
-        cat:      currentCategory !== 'all' ? currentCategory : undefined,
-        ville:    document.getElementById('villeFilter').value || undefined,
-        q:        document.getElementById('searchInput').value || undefined,
-        min_prix: document.getElementById('priceMin').value || undefined,
-        max_prix: document.getElementById('priceMax').value || undefined,
-        badge:    getBadgeFilter(),
-        sort:     document.getElementById('sortSelect').value,
-        page:     currentPage
-      });
+      // Tentative appel API réelle
+      const data = await Promise.race([
+        Annonces.getAll({
+          cat:      currentCategory !== 'all' ? currentCategory : undefined,
+          ville:    document.getElementById('villeFilter').value || undefined,
+          q:        document.getElementById('searchInput').value || undefined,
+          min_prix: document.getElementById('priceMin').value || undefined,
+          max_prix: document.getElementById('priceMax').value || undefined,
+          badge:    getBadgeFilter(),
+          sort:     document.getElementById('sortSelect').value,
+          page:     currentPage
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      ]);
 
       totalAnnonces = data.total;
       renderGrid(data.annonces);
@@ -468,11 +521,16 @@
         data.total + ' annonce' + (data.total > 1 ? 's' : '') + ' trouvée' + (data.total > 1 ? 's' : '');
 
     } catch (err) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted)">
-        <div style="font-size:2rem;margin-bottom:0.5rem">⚠️</div>
-        Impossible de charger les annonces.<br/>
-        <span style="font-size:0.8rem">${err.message}</span>
-      </div>`;
+      // Fallback automatique sur les données de démonstration
+      console.warn('API indisponible, utilisation des données de démonstration.');
+      const filtered = filterMock();
+      const start = (currentPage - 1) * perPage;
+      const page = filtered.slice(start, start + perPage);
+      totalAnnonces = filtered.length;
+      renderGrid(page);
+      renderPagination(filtered.length);
+      document.getElementById('resultsCount').textContent =
+        filtered.length + ' annonce' + (filtered.length > 1 ? 's' : '') + ' trouvée' + (filtered.length > 1 ? 's' : '') + ' (démo)';
     }
   }
 
