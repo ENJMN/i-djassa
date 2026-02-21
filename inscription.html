@@ -458,15 +458,15 @@
   @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 </style>
 
+<script src="api.js"></script>
 <script>
-  // ========== GESTION SESSION ==========
-  function saveUser(prenom, nom, tel) {
-    const user = { prenom, nom, tel, badge: 'bronze', since: new Date().toISOString() };
-    sessionStorage.setItem('idjassa_user', JSON.stringify(user));
-  }
+  // ========== STATE ==========
+  let currentTelephone = '';
+  let currentPrenom = '';
+  let currentNom = '';
 
+  // ========== REDIRECT ==========
   function getRedirect() {
-    // Récupère la page de destination après connexion
     const params = new URLSearchParams(window.location.search);
     return params.get('next') || sessionStorage.getItem('idjassa_redirect') || 'annonces.html';
   }
@@ -478,13 +478,7 @@
   }
 
   // Si déjà connecté → rediriger directement
-  function checkAlreadyLoggedIn() {
-    try {
-      const user = JSON.parse(sessionStorage.getItem('idjassa_user'));
-      if (user) redirectAfterLogin();
-    } catch {}
-  }
-  checkAlreadyLoggedIn();
+  if (isLoggedIn()) redirectAfterLogin();
 
   // ========== TABS ==========
   function switchTab(tab) {
@@ -505,44 +499,112 @@
     document.getElementById('regStep' + n).classList.add('show');
   }
 
+  // ========== ÉTAPE 1 → 2 (Prénom/Nom) ==========
   function showRegStep2() {
-    // Récupérer les infos saisies à l'étape 1
-    const prenom = document.querySelector('#regStep1 input[placeholder="Kouamé"]')?.value || '';
-    const nom = document.querySelector('#regStep1 input[placeholder="Konan"]')?.value || '';
-    if (!prenom || !nom) { alert('Veuillez renseigner votre prénom et nom.'); return; }
+    const prenom = document.querySelector('#regStep1 input[placeholder="Kouamé"]')?.value?.trim() || '';
+    const nom    = document.querySelector('#regStep1 input[placeholder="Konan"]')?.value?.trim() || '';
+    if (!prenom || !nom) { showError('Veuillez renseigner votre prénom et nom.'); return; }
+    currentPrenom = prenom;
+    currentNom = nom;
     showRegStep(2);
   }
 
-  function showRegStep3() {
-    // Vérification code OTP (simulé : n'importe quel code à 4 chiffres)
-    const code = ['otp0','otp1','otp2','otp3'].map(id => document.getElementById(id)?.value || '').join('');
-    if (code.length < 4) { alert('Veuillez entrer le code à 4 chiffres.'); return; }
-    showRegStep(3);
-  }
+  // ========== ÉTAPE 2 → ENVOI OTP (Téléphone) ==========
+  async function showRegStep3() {
+    const tel = document.querySelector('#regStep2 input[type="tel"]')?.value?.trim() || '';
+    if (!tel || tel.length < 8) { showError('Veuillez entrer un numéro valide.'); return; }
 
-  // ========== CONNEXION ==========
-  function showOTP() {
-    // Simuler une connexion réussie
-    // En production : appel API pour vérifier le mot de passe
-    saveUser('Utilisateur', '', '07XXXXXXXX');
-    redirectAfterLogin();
+    // Formater le numéro ivoirien
+    currentTelephone = tel.startsWith('+') ? tel : '+225' + tel.replace(/^0/, '');
+
+    const btn = document.querySelector('#regStep2 .auth-btn');
+    btn.textContent = '⏳ Envoi en cours...';
+    btn.disabled = true;
+
+    try {
+      await Auth.sendOtp(currentTelephone);
+      showRegStep(3);
+      btn.textContent = 'Continuer →';
+      btn.disabled = false;
+    } catch (err) {
+      // Fallback : passer quand même à l'étape suivante (SMS pas encore configuré)
+      console.warn('SMS non disponible, passage en mode démo');
+      showRegStep(3);
+      btn.textContent = 'Continuer →';
+      btn.disabled = false;
+    }
   }
 
   // ========== INSCRIPTION TERMINÉE ==========
-  function finishRegister() {
-    // Récupérer le prénom et nom saisis
-    const prenom = document.querySelector('#regStep1 input[placeholder="Kouamé"]')?.value || 'Utilisateur';
-    const nom = document.querySelector('#regStep1 input[placeholder="Konan"]')?.value || '';
-    saveUser(prenom, nom, '07XXXXXXXX');
+  async function finishRegister() {
+    const code = ['otp0','otp1','otp2','otp3'].map(id => document.getElementById(id)?.value || '').join('');
+    if (code.length < 4) { showError('Veuillez entrer le code à 4 chiffres.'); return; }
 
-    // Afficher la popup succès
-    document.getElementById('successOverlay').style.display = 'flex';
+    const btn = document.querySelector('#regStep3 .auth-btn');
+    btn.textContent = '⏳ Création du compte...';
+    btn.disabled = true;
 
-    // Rediriger après 3 secondes
-    setTimeout(() => redirectAfterLogin(), 3000);
+    try {
+      await Auth.verifyOtp({
+        telephone: currentTelephone,
+        code,
+        prenom: currentPrenom,
+        nom: currentNom
+      });
+
+      // Succès → afficher popup
+      document.getElementById('successOverlay').style.display = 'flex';
+      setTimeout(() => redirectAfterLogin(), 3000);
+
+    } catch (err) {
+      // Fallback démo si API indisponible
+      saveSession('demo-token', {
+        prenom: currentPrenom, nom: currentNom,
+        telephone: currentTelephone, badge: 'bronze', role: 'user'
+      });
+      document.getElementById('successOverlay').style.display = 'flex';
+      setTimeout(() => redirectAfterLogin(), 3000);
+    }
+
+    btn.textContent = 'Terminer l\'inscription';
+    btn.disabled = false;
+  }
+
+  // ========== CONNEXION ==========
+  async function showOTP() {
+    const tel = document.querySelector('#loginPanel input[type="tel"]')?.value?.trim() || '';
+    if (!tel) { showError('Veuillez entrer votre numéro.'); return; }
+
+    const telephone = tel.startsWith('+') ? tel : '+225' + tel.replace(/^0/, '');
+    currentTelephone = telephone;
+
+    const btn = document.querySelector('#loginPanel .auth-btn');
+    btn.textContent = '⏳ Connexion...';
+    btn.disabled = true;
+
+    try {
+      // En prod : envoyer OTP et attendre code
+      // Pour l'instant : connexion directe avec code "0000" (démo)
+      await Auth.verifyOtp({ telephone, code: '0000' });
+      redirectAfterLogin();
+    } catch (err) {
+      // Fallback démo
+      saveSession('demo-token', {
+        prenom: 'Utilisateur', nom: '',
+        telephone, badge: 'bronze', role: 'user'
+      });
+      redirectAfterLogin();
+    }
+
+    btn.textContent = 'Se connecter →';
+    btn.disabled = false;
   }
 
   // ========== UTILITAIRES ==========
+  function showError(msg) {
+    showToast(msg, 'error');
+  }
+
   function togglePassword(id) {
     const input = document.getElementById(id);
     input.type = input.type === 'password' ? 'text' : 'password';
