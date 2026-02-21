@@ -418,46 +418,22 @@
   </main>
 </div>
 
+<script src="api.js"></script>
 <script>
-  const annonces = [
-    { id:1, titre:"Samsung Galaxy A54 128Go", cat:"tel", catLabel:"Téléphones", prix:120000, ville:"Cocody, Abidjan", icon:"📱", badge:"gold", time:"Il y a 2h" },
-    { id:2, titre:"MacBook Pro M1 256Go 2020", cat:"info", catLabel:"Informatique", prix:650000, ville:"Plateau, Abidjan", icon:"💻", badge:"gold", time:"Il y a 3h" },
-    { id:3, titre:"TV LG 55 pouces 4K Smart", cat:"elec", catLabel:"Électroménager", prix:280000, ville:"Yopougon, Abidjan", icon:"📺", badge:"silver", time:"Il y a 5h" },
-    { id:4, titre:"iPhone 13 Pro 256Go — Excellent état", cat:"tel", catLabel:"Téléphones", prix:450000, ville:"Marcory, Abidjan", icon:"📱", badge:"gold", time:"Il y a 6h" },
-    { id:5, titre:"Canapé 3 places cuir marron", cat:"mob", catLabel:"Mobilier", prix:85000, ville:"Treichville, Abidjan", icon:"🛋️", badge:"bronze", time:"Il y a 8h" },
-    { id:6, titre:"Réfrigérateur Samsung 300L", cat:"elec", catLabel:"Électroménager", prix:195000, ville:"Bouaké", icon:"🧊", badge:"silver", time:"Il y a 10h" },
-    { id:7, titre:"Laptop HP EliteBook i5 8Go", cat:"info", catLabel:"Informatique", prix:220000, ville:"Adjamé, Abidjan", icon:"💻", badge:"silver", time:"Il y a 12h" },
-    { id:8, titre:"Robe soirée élégante T38", cat:"mode", catLabel:"Mode", prix:25000, ville:"Cocody, Abidjan", icon:"👗", badge:"bronze", time:"Il y a 1j" },
-    { id:9, titre:"Samsung Galaxy S21 FE 128Go", cat:"tel", catLabel:"Téléphones", prix:200000, ville:"Abobo, Abidjan", icon:"📱", badge:"silver", time:"Il y a 1j" },
-    { id:10, titre:"Toyota Corolla 2015 essence", cat:"auto", catLabel:"Véhicules", prix:5500000, ville:"Plateau, Abidjan", icon:"🚗", badge:"gold", time:"Il y a 1j" },
-    { id:11, titre:"Machine à laver Bosch 7kg", cat:"elec", catLabel:"Électroménager", prix:165000, ville:"Yamoussoukro", icon:"🫧", badge:"silver", time:"Il y a 2j" },
-    { id:12, titre:"iPad Air 5ème génération 64Go", cat:"info", catLabel:"Informatique", prix:320000, ville:"Cocody, Abidjan", icon:"📱", badge:"gold", time:"Il y a 2j" },
-    { id:13, titre:"Xiaomi Redmi Note 12 128Go", cat:"tel", catLabel:"Téléphones", prix:85000, ville:"Yopougon, Abidjan", icon:"📱", badge:"bronze", time:"Il y a 2j" },
-    { id:14, titre:"Climatiseur Midea 1.5 CV", cat:"elec", catLabel:"Électroménager", prix:145000, ville:"Bouaké", icon:"❄️", badge:"silver", time:"Il y a 3j" },
-    { id:15, titre:"Moto Yamaha FZ 2019", cat:"auto", catLabel:"Véhicules", prix:1200000, ville:"San-Pédro", icon:"🏍️", badge:"silver", time:"Il y a 3j" },
-    { id:16, titre:"Table à manger 6 personnes", cat:"mob", catLabel:"Mobilier", prix:120000, ville:"Abobo, Abidjan", icon:"🪑", badge:"bronze", time:"Il y a 4j" },
-    { id:17, titre:"Chaussures Nike Air Max T43", cat:"mode", catLabel:"Mode", prix:35000, ville:"Marcory, Abidjan", icon:"👟", badge:"bronze", time:"Il y a 4j" },
-    { id:18, titre:"Oppo A78 128Go Neuf", cat:"tel", catLabel:"Téléphones", prix:110000, ville:"Daloa", icon:"📱", badge:"silver", time:"Il y a 5j" },
-    { id:19, titre:"Dell XPS 15 i7 16Go RTX", cat:"info", catLabel:"Informatique", prix:890000, ville:"Plateau, Abidjan", icon:"💻", badge:"gold", time:"Il y a 5j" },
-    { id:20, titre:"Sac à main Louis Vuitton", cat:"mode", catLabel:"Mode", prix:180000, ville:"Cocody, Abidjan", icon:"👜", badge:"gold", time:"Il y a 6j" },
-    { id:21, titre:"iPhone 12 64Go Noir", cat:"tel", catLabel:"Téléphones", prix:280000, ville:"Korhogo", icon:"📱", badge:"silver", time:"Il y a 6j" },
-    { id:22, titre:"Four micro-ondes LG 25L", cat:"elec", catLabel:"Électroménager", prix:55000, ville:"Yopougon, Abidjan", icon:"🍳", badge:"bronze", time:"Il y a 7j" },
-    { id:23, titre:"Samsung A23 64Go Rose", cat:"tel", catLabel:"Téléphones", prix:75000, ville:"Treichville, Abidjan", icon:"📱", badge:"bronze", time:"Il y a 7j" },
-    { id:24, titre:"Bureau en bois massif", cat:"mob", catLabel:"Mobilier", prix:95000, ville:"Adjamé, Abidjan", icon:"🪑", badge:"silver", time:"Il y a 8j" },
-  ];
-
   let currentCategory = 'all';
   let currentPage = 1;
+  let totalAnnonces = 0;
   const perPage = 12;
 
+  // Lire les params URL (ex: annonces.html?cat=info)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('cat')) currentCategory = urlParams.get('cat');
+  if (urlParams.get('q')) document.getElementById('searchInput').value = urlParams.get('q');
+
   function getBadgeHTML(badge) {
-    if (badge === 'gold') return '<span class="annonce-badge-img badge-gold-img">🥇 Certifié</span>';
+    if (badge === 'gold')   return '<span class="annonce-badge-img badge-gold-img">🥇 Certifié</span>';
     if (badge === 'silver') return '<span class="annonce-badge-img badge-silver-img">🥈 Vérifié</span>';
     return '<span class="annonce-badge-img badge-bronze-img">🥉 Basique</span>';
-  }
-
-  function formatPrice(p) {
-    return p.toLocaleString('fr-FR') + ' FCFA';
   }
 
   function setCategory(btn, cat) {
@@ -465,51 +441,60 @@
     btn.classList.add('active');
     currentCategory = cat;
     currentPage = 1;
-    filterAnnonces();
+    loadAnnonces();
+  }
+
+  async function loadAnnonces() {
+    const grid = document.getElementById('annoncesGrid');
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted)">
+      <div style="font-size:2rem;margin-bottom:0.5rem">⏳</div>Chargement...</div>`;
+
+    try {
+      const data = await Annonces.getAll({
+        cat:      currentCategory !== 'all' ? currentCategory : undefined,
+        ville:    document.getElementById('villeFilter').value || undefined,
+        q:        document.getElementById('searchInput').value || undefined,
+        min_prix: document.getElementById('priceMin').value || undefined,
+        max_prix: document.getElementById('priceMax').value || undefined,
+        badge:    getBadgeFilter(),
+        sort:     document.getElementById('sortSelect').value,
+        page:     currentPage
+      });
+
+      totalAnnonces = data.total;
+      renderGrid(data.annonces);
+      renderPagination(data.total);
+      document.getElementById('resultsCount').textContent =
+        data.total + ' annonce' + (data.total > 1 ? 's' : '') + ' trouvée' + (data.total > 1 ? 's' : '');
+
+    } catch (err) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted)">
+        <div style="font-size:2rem;margin-bottom:0.5rem">⚠️</div>
+        Impossible de charger les annonces.<br/>
+        <span style="font-size:0.8rem">${err.message}</span>
+      </div>`;
+    }
+  }
+
+  function getBadgeFilter() {
+    const gold   = document.getElementById('goldFilter').checked;
+    const silver = document.getElementById('silverFilter').checked;
+    const bronze = document.getElementById('bronzeFilter').checked;
+    if (gold)   return 'gold';
+    if (silver) return 'silver';
+    if (bronze) return 'bronze';
+    return undefined;
   }
 
   function filterAnnonces() {
-    let filtered = [...annonces];
-    const search = document.getElementById('searchInput').value.toLowerCase();
-    const ville = document.getElementById('villeFilter').value;
-    const priceMin = parseInt(document.getElementById('priceMin').value) || 0;
-    const priceMax = parseInt(document.getElementById('priceMax').value) || Infinity;
-    const goldOnly = document.getElementById('goldFilter').checked;
-    const silverOnly = document.getElementById('silverFilter').checked;
-    const bronzeOnly = document.getElementById('bronzeFilter').checked;
-    const sort = document.getElementById('sortSelect').value;
-
-    if (currentCategory !== 'all') filtered = filtered.filter(a => a.cat === currentCategory);
-    if (search) filtered = filtered.filter(a => a.titre.toLowerCase().includes(search));
-    if (ville) filtered = filtered.filter(a => a.ville.toLowerCase().includes(ville));
-    filtered = filtered.filter(a => a.prix >= priceMin && a.prix <= priceMax);
-
-    if (goldOnly || silverOnly || bronzeOnly) {
-      filtered = filtered.filter(a =>
-        (goldOnly && a.badge === 'gold') ||
-        (silverOnly && a.badge === 'silver') ||
-        (bronzeOnly && a.badge === 'bronze')
-      );
-    }
-
-    if (sort === 'price-asc') filtered.sort((a,b) => a.prix - b.prix);
-    else if (sort === 'price-desc') filtered.sort((a,b) => b.prix - a.prix);
-    else if (sort === 'trust') filtered.sort((a,b) => {
-      const order = {gold:0, silver:1, bronze:2};
-      return order[a.badge] - order[b.badge];
-    });
-
-    renderGrid(filtered);
-    renderPagination(filtered.length);
-    document.getElementById('resultsCount').textContent = filtered.length + ' annonce' + (filtered.length > 1 ? 's' : '') + ' trouvée' + (filtered.length > 1 ? 's' : '');
+    currentPage = 1;
+    loadAnnonces();
   }
 
-  function renderGrid(data) {
+  function renderGrid(annonces) {
     const grid = document.getElementById('annoncesGrid');
-    const start = (currentPage - 1) * perPage;
-    const page = data.slice(start, start + perPage);
 
-    if (page.length === 0) {
+    if (!annonces.length) {
       grid.innerHTML = `<div class="empty-state">
         <div class="empty-icon">🔍</div>
         <div class="empty-title">Aucune annonce trouvée</div>
@@ -518,20 +503,22 @@
       return;
     }
 
-    grid.innerHTML = page.map(a => `
-      <a class="annonce-card" href="#">
+    grid.innerHTML = annonces.map(a => `
+      <a class="annonce-card" href="annonce-detail.html?id=${a.id}">
         <div class="annonce-img">
-          ${a.icon}
+          ${a.photo_principale
+            ? `<img src="${a.photo_principale}" alt="${a.titre}" style="width:100%;height:100%;object-fit:cover"/>`
+            : `<span style="font-size:3rem">${a.categorie_emoji || '📦'}</span>`}
           <button class="fav-btn" onclick="event.preventDefault()">🤍</button>
-          ${getBadgeHTML(a.badge)}
+          ${getBadgeHTML(a.vendeur_badge)}
         </div>
         <div class="annonce-body">
-          <div class="annonce-cat">${a.catLabel}</div>
+          <div class="annonce-cat">${a.categorie_emoji} ${a.categorie_nom}</div>
           <div class="annonce-title">${a.titre}</div>
-          <div class="annonce-price">${formatPrice(a.prix)}</div>
+          <div class="annonce-price">${formatPrix(a.prix)}${a.negociable ? ' <span style="font-size:0.7rem;color:var(--green-light)">Nég.</span>' : ''}</div>
           <div class="annonce-footer">
             <span class="annonce-loc">📍 ${a.ville}</span>
-            <span class="annonce-time">${a.time}</span>
+            <span class="annonce-time">${timeAgo(a.created_at)}</span>
           </div>
         </div>
       </a>
@@ -552,16 +539,15 @@
   }
 
   function changePage(p) {
-    const total = annonces.length;
-    const pages = Math.ceil(total / perPage);
+    const pages = Math.ceil(totalAnnonces / perPage);
     if (p < 1 || p > pages) return;
     currentPage = p;
-    filterAnnonces();
+    loadAnnonces();
     window.scrollTo(0, 0);
   }
 
   // Init
-  filterAnnonces();
+  loadAnnonces();
 </script>
 </body>
 </html>
